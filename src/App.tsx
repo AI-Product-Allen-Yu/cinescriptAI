@@ -8,6 +8,7 @@ import Navigation from "./components/Navigation";
 import { AppFooter } from "./components/AppFooter";
 import Landing from "./pages/Landing";
 import Generate from "./pages/Generate";
+import Dashboard from "./pages/Dashboard";
 import Auth from "./pages/Auth";
 
 const queryClient = new QueryClient();
@@ -36,6 +37,16 @@ const App = () => (
               <ProtectedRoute>
                 <Navigation />
                 <Generate />
+                <AppFooter />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Navigation />
+                <Dashboard />
                 <AppFooter />
               </ProtectedRoute>
             }

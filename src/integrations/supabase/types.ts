@@ -14,7 +14,131 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      credit_transactions: {
+        Row: {
+          action: string
+          amount: number
+          balance_after: number
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          action: string
+          amount: number
+          balance_after: number
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          action?: string
+          amount?: number
+          balance_after?: number
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      scheduled_posts: {
+        Row: {
+          caption: string | null
+          created_at: string
+          hashtags: string[] | null
+          id: string
+          platforms: string[]
+          scheduled_time: string
+          status: string
+          user_id: string
+          video_id: string | null
+          workflow_id: string | null
+        }
+        Insert: {
+          caption?: string | null
+          created_at?: string
+          hashtags?: string[] | null
+          id?: string
+          platforms: string[]
+          scheduled_time: string
+          status?: string
+          user_id: string
+          video_id?: string | null
+          workflow_id?: string | null
+        }
+        Update: {
+          caption?: string | null
+          created_at?: string
+          hashtags?: string[] | null
+          id?: string
+          platforms?: string[]
+          scheduled_time?: string
+          status?: string
+          user_id?: string
+          video_id?: string | null
+          workflow_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scheduled_posts_video_id_fkey"
+            columns: ["video_id"]
+            isOneToOne: false
+            referencedRelation: "video_history"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_credits: {
+        Row: {
+          balance: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          balance?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          balance?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      video_history: {
+        Row: {
+          created_at: string
+          id: string
+          idea_data: Json | null
+          status: string
+          thumbnail_url: string | null
+          title: string
+          user_id: string
+          video_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          idea_data?: Json | null
+          status: string
+          thumbnail_url?: string | null
+          title: string
+          user_id: string
+          video_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          idea_data?: Json | null
+          status?: string
+          thumbnail_url?: string | null
+          title?: string
+          user_id?: string
+          video_url?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
