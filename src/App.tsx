@@ -4,7 +4,10 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ProtectedRoute } from "./components/ProtectedRoute";
-import Index from "./pages/Index";
+import Navigation from "./components/Navigation";
+import { AppFooter } from "./components/AppFooter";
+import Landing from "./pages/Landing";
+import Generate from "./pages/Generate";
 import Auth from "./pages/Auth";
 
 const queryClient = new QueryClient();
@@ -20,8 +23,20 @@ const App = () => (
           <Route
             path="/"
             element={
+              <>
+                <Navigation />
+                <Landing />
+                <AppFooter />
+              </>
+            }
+          />
+          <Route
+            path="/generate"
+            element={
               <ProtectedRoute>
-                <Index />
+                <Navigation />
+                <Generate />
+                <AppFooter />
               </ProtectedRoute>
             }
           />
