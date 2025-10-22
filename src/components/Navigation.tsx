@@ -1,11 +1,18 @@
 import { useState, useEffect } from "react";
-import { Command, Menu } from "lucide-react";
+import { Command, Menu, LogOut, User } from "lucide-react";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { Session } from "@supabase/supabase-js";
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [session, setSession] = useState<Session | null>(null);
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -15,6 +22,35 @@ const Navigation = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleSignOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to sign out",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Signed out",
+        description: "You've been signed out successfully",
+      });
+      navigate("/auth");
+    }
+  };
 
   const scrollToSection = (sectionId: string) => {
     if (sectionId === 'testimonials') {
@@ -77,13 +113,26 @@ const Navigation = () => {
                 {item.name}
               </a>
             ))}
-            <Button 
-              onClick={() => scrollToSection('cta')}
-              size="sm"
-              className="button-gradient"
-            >
-              Increase Revenue
-            </Button>
+            {session ? (
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                  <User className="w-3 h-3" />
+                  {session.user.email?.split('@')[0]}
+                </div>
+                <Button onClick={handleSignOut} variant="outline" size="sm">
+                  <LogOut className="w-3 h-3 mr-1" />
+                  Sign Out
+                </Button>
+              </div>
+            ) : (
+              <Button 
+                onClick={() => navigate("/auth")}
+                size="sm"
+                className="button-gradient"
+              >
+                Get Started
+              </Button>
+            )}
           </div>
 
           {/* Mobile Navigation */}
@@ -112,15 +161,34 @@ const Navigation = () => {
                       {item.name}
                     </a>
                   ))}
-                  <Button 
-                    onClick={() => {
-                      setIsMobileMenuOpen(false);
-                      scrollToSection('cta');
-                    }}
-                    className="button-gradient mt-4"
-                  >
-                    Start Now
-                  </Button>
+                  {session ? (
+                    <>
+                      <div className="text-sm text-muted-foreground pt-2">
+                        {session.user.email}
+                      </div>
+                      <Button 
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          handleSignOut();
+                        }}
+                        variant="outline"
+                        className="mt-2"
+                      >
+                        <LogOut className="w-4 h-4 mr-2" />
+                        Sign Out
+                      </Button>
+                    </>
+                  ) : (
+                    <Button 
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        navigate("/auth");
+                      }}
+                      className="button-gradient mt-4"
+                    >
+                      Get Started
+                    </Button>
+                  )}
                 </div>
               </SheetContent>
             </Sheet>
