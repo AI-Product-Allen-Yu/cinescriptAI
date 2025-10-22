@@ -4,11 +4,27 @@ import { Sparkles, Wand2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DirectPromptMode } from "@/components/generate/DirectPromptMode";
 import { StoryMode } from "@/components/generate/StoryMode";
+import { IdeasGeneration } from "@/components/generate/IdeasGeneration";
+import type { GenerationData } from "@/types/generation";
 
 type Mode = "direct_prompt" | "story_mode" | null;
+type Step = "mode_selection" | "ideas_generation";
 
 const Index = () => {
   const [selectedMode, setSelectedMode] = useState<Mode>(null);
+  const [currentStep, setCurrentStep] = useState<Step>("mode_selection");
+  const [generationData, setGenerationData] = useState<GenerationData | null>(null);
+
+  const handleProceedToIdeas = (data: GenerationData) => {
+    setGenerationData(data);
+    setCurrentStep("ideas_generation");
+  };
+
+  const handleBackToMode = () => {
+    setCurrentStep("mode_selection");
+    setSelectedMode(null);
+    setGenerationData(null);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -44,8 +60,8 @@ const Index = () => {
             </p>
           </div>
 
-          {/* Mode Selection or Selected Mode */}
-          {!selectedMode ? (
+          {/* Step Content */}
+          {currentStep === "mode_selection" && !selectedMode ? (
             <div className="grid md:grid-cols-2 gap-6 mb-8">
               {/* Direct Prompt Card */}
               <motion.button
@@ -89,7 +105,7 @@ const Index = () => {
                 </div>
               </motion.button>
             </div>
-          ) : (
+          ) : currentStep === "mode_selection" ? (
             <div className="mb-8">
               <Button
                 variant="ghost"
@@ -99,13 +115,22 @@ const Index = () => {
                 ← Change Mode
               </Button>
 
-              {selectedMode === "direct_prompt" && <DirectPromptMode />}
-              {selectedMode === "story_mode" && <StoryMode />}
+              {selectedMode === "direct_prompt" && (
+                <DirectPromptMode onProceed={handleProceedToIdeas} />
+              )}
+              {selectedMode === "story_mode" && (
+                <StoryMode onProceed={handleProceedToIdeas} />
+              )}
             </div>
+          ) : (
+            <IdeasGeneration 
+              generationData={generationData!} 
+              onBack={handleBackToMode}
+            />
           )}
 
           {/* Credit Estimate Footer */}
-          {selectedMode && (
+          {selectedMode && currentStep === "mode_selection" && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}

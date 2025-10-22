@@ -5,10 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import type { GenerationData } from "@/types/generation";
 
 const TONE_OPTIONS = ["funny", "inspirational", "educational", "professional"] as const;
 
-export const StoryMode = () => {
+interface StoryModeProps {
+  onProceed: (data: GenerationData) => void;
+}
+
+export const StoryMode = ({ onProceed }: StoryModeProps) => {
   const [story, setStory] = useState("");
   const [brandValues, setBrandValues] = useState<string[]>([]);
   const [newValue, setNewValue] = useState("");
@@ -45,9 +50,11 @@ export const StoryMode = () => {
       return;
     }
 
-    toast({
-      title: "Generating ideas...",
-      description: "AI is crafting personalized prompt ideas for you.",
+    onProceed({
+      mode: "story_mode",
+      story,
+      brandValues,
+      tone: selectedTone,
     });
   };
 

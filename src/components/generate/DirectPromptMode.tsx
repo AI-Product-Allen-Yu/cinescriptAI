@@ -4,8 +4,13 @@ import { Wand2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import type { GenerationData } from "@/types/generation";
 
-export const DirectPromptMode = () => {
+interface DirectPromptModeProps {
+  onProceed: (data: GenerationData) => void;
+}
+
+export const DirectPromptMode = ({ onProceed }: DirectPromptModeProps) => {
   const [prompt, setPrompt] = useState("");
   const { toast } = useToast();
 
@@ -19,9 +24,9 @@ export const DirectPromptMode = () => {
       return;
     }
 
-    toast({
-      title: "Generating video...",
-      description: "Your video is being created. This may take a few moments.",
+    onProceed({
+      mode: "direct_prompt",
+      directPromptText: prompt,
     });
   };
 
