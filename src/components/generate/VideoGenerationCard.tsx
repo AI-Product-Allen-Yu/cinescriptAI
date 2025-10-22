@@ -9,7 +9,8 @@ import {
   Play,
   Clock,
   Sparkles,
-  Languages
+  Languages,
+  CalendarClock
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -23,6 +24,7 @@ interface VideoGenerationCardProps {
   onRetry: () => void;
   onRemoveWatermark?: () => void;
   onGenerateCaptions?: (languages: string[], aiModel: string) => void;
+  onSchedule?: () => void;
 }
 
 export const VideoGenerationCard = ({ 
@@ -31,7 +33,8 @@ export const VideoGenerationCard = ({
   index,
   onRetry,
   onRemoveWatermark,
-  onGenerateCaptions
+  onGenerateCaptions,
+  onSchedule
 }: VideoGenerationCardProps) => {
   const [showCaptionModal, setShowCaptionModal] = useState(false);
   const getStatusIcon = () => {
@@ -202,11 +205,28 @@ export const VideoGenerationCard = ({
 
               {/* Primary Actions */}
               <div className="flex items-center gap-2">
-                <Button variant="outline" className="flex-1">
-                  <RefreshCw className="w-4 h-4 mr-2" />
-                  Remix
-                </Button>
-                <Button className="flex-1 button-gradient">
+                {!job.scheduled && onSchedule && (
+                  <Button 
+                    variant="outline" 
+                    className="flex-1"
+                    onClick={onSchedule}
+                  >
+                    <CalendarClock className="w-4 h-4 mr-2" />
+                    Schedule Post
+                  </Button>
+                )}
+                {job.scheduled && (
+                  <div className="flex-1 glass rounded-lg p-3 border border-secondary/50 bg-secondary/10">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-secondary" />
+                      <span className="text-sm font-medium">Scheduled</span>
+                    </div>
+                  </div>
+                )}
+                <Button
+                  size="sm"
+                  className="flex-1 button-gradient"
+                >
                   <Download className="w-4 h-4 mr-2" />
                   Download
                 </Button>

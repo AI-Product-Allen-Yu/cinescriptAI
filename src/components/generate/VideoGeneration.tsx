@@ -4,6 +4,7 @@ import { ChevronLeft, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { VideoGenerationCard } from "./VideoGenerationCard";
+import { SchedulePost } from "./SchedulePost";
 import type { ContentIdea, VideoGenerationJob } from "@/types/generation";
 
 interface VideoGenerationProps {
@@ -64,6 +65,7 @@ const simulateVideoGeneration = (
 export const VideoGeneration = ({ selectedIdeas, onBack }: VideoGenerationProps) => {
   const [jobs, setJobs] = useState<Map<string, VideoGenerationJob>>(new Map());
   const [totalCreditsUsed, setTotalCreditsUsed] = useState(0);
+  const [schedulingJob, setSchedulingJob] = useState<VideoGenerationJob | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -181,6 +183,36 @@ export const VideoGeneration = ({ selectedIdeas, onBack }: VideoGenerationProps)
     }, 4000);
   };
 
+  const handleSchedule = (ideaId: string) => {
+    const job = jobs.get(ideaId);
+    if (job && job.status === "completed") {
+      setSchedulingJob(job);
+    }
+  };
+
+  const handleScheduleComplete = () => {
+    if (schedulingJob) {
+      setJobs((prev) => {
+        const newJobs = new Map(prev);
+        const job = newJobs.get(schedulingJob.ideaId);
+        if (job) {
+          newJobs.set(schedulingJob.ideaId, { ...job, scheduled: true });
+        }
+        return newJobs;
+      });
+      setSchedulingJob(null);
+    }
+  };
+
+  if (schedulingJob) {
+    return (
+      <SchedulePost 
+        job={schedulingJob} 
+        onBack={handleScheduleComplete}
+      />
+    );
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -242,6 +274,7 @@ export const VideoGeneration = ({ selectedIdeas, onBack }: VideoGenerationProps)
                 onRetry={() => handleRetry(idea.id)}
                 onRemoveWatermark={() => handleRemoveWatermark(idea.id)}
                 onGenerateCaptions={(languages, aiModel) => handleGenerateCaptions(idea.id, languages, aiModel)}
+                onSchedule={() => handleSchedule(idea.id)}
               />
             );
           })}

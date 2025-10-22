@@ -33,6 +33,7 @@ export interface VideoGenerationJob {
   cleanVideoUrl?: string;
   captions?: Caption[];
   captionGenerating?: boolean;
+  scheduled?: boolean;
 }
 
 export interface Caption {
