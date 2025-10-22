@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Languages, Download, Check } from "lucide-react";
+import { X, Languages, Download, Check, Brain } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { Caption } from "@/types/generation";
 
@@ -20,10 +21,17 @@ const AVAILABLE_LANGUAGES = [
   { code: "ar", name: "Arabic" },
 ];
 
+const AI_MODELS = [
+  { id: "gemini", name: "Gemini", description: "Google's multimodal AI" },
+  { id: "gpt", name: "GPT", description: "OpenAI's language model" },
+  { id: "grok", name: "Grok", description: "xAI's conversational AI" },
+  { id: "claude", name: "Claude", description: "Anthropic's AI assistant" },
+] as const;
+
 interface CaptionModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onGenerate: (languages: string[]) => void;
+  onGenerate: (languages: string[], aiModel: string) => void;
   captions?: Caption[];
   isGenerating?: boolean;
 }
@@ -36,6 +44,7 @@ export const CaptionModal = ({
   isGenerating,
 }: CaptionModalProps) => {
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>(["en"]);
+  const [selectedAiModel, setSelectedAiModel] = useState<string>("gemini");
 
   const toggleLanguage = (code: string) => {
     setSelectedLanguages((prev) =>
@@ -44,8 +53,8 @@ export const CaptionModal = ({
   };
 
   const handleGenerate = () => {
-    if (selectedLanguages.length > 0) {
-      onGenerate(selectedLanguages);
+    if (selectedLanguages.length > 0 && selectedAiModel) {
+      onGenerate(selectedLanguages, selectedAiModel);
     }
   };
 
@@ -90,34 +99,77 @@ export const CaptionModal = ({
                 </button>
               </div>
 
-              {/* Language Selection */}
+              {/* AI Model & Language Selection */}
               {!captions && (
-                <div className="flex-1 overflow-hidden">
-                  <ScrollArea className="h-[300px] pr-4">
-                    <div className="grid grid-cols-2 gap-3">
-                      {AVAILABLE_LANGUAGES.map((lang) => (
-                        <div
-                          key={lang.code}
-                          className={`glass glass-hover rounded-lg p-4 border transition-all cursor-pointer ${
-                            selectedLanguages.includes(lang.code)
-                              ? "border-secondary/50 bg-secondary/10"
-                              : "border-border/50"
-                          }`}
-                          onClick={() => toggleLanguage(lang.code)}
-                        >
-                          <div className="flex items-center gap-3">
-                            <Checkbox
-                              checked={selectedLanguages.includes(lang.code)}
-                              onCheckedChange={() => toggleLanguage(lang.code)}
-                            />
-                            <Label className="cursor-pointer font-medium">
-                              {lang.name}
-                            </Label>
-                          </div>
-                        </div>
-                      ))}
+                <div className="flex-1 overflow-hidden space-y-6">
+                  {/* AI Model Selection */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <Brain className="w-4 h-4 text-secondary" />
+                      <label className="text-sm font-medium">
+                        Select AI Model
+                      </label>
                     </div>
-                  </ScrollArea>
+                    <RadioGroup value={selectedAiModel} onValueChange={setSelectedAiModel}>
+                      <div className="grid grid-cols-2 gap-3">
+                        {AI_MODELS.map((model) => (
+                          <div
+                            key={model.id}
+                            className={`glass glass-hover rounded-lg p-4 border transition-all cursor-pointer ${
+                              selectedAiModel === model.id
+                                ? "border-secondary/50 bg-secondary/10"
+                                : "border-border/50"
+                            }`}
+                            onClick={() => setSelectedAiModel(model.id)}
+                          >
+                            <div className="flex items-start gap-3">
+                              <RadioGroupItem value={model.id} id={model.id} className="mt-0.5" />
+                              <div className="flex-1">
+                                <Label htmlFor={model.id} className="cursor-pointer font-medium block mb-1">
+                                  {model.name}
+                                </Label>
+                                <p className="text-xs text-muted-foreground">
+                                  {model.description}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </RadioGroup>
+                  </div>
+
+                  {/* Language Selection */}
+                  <div>
+                    <label className="text-sm font-medium block mb-3">
+                      Select Languages
+                    </label>
+                    <ScrollArea className="h-[200px] pr-4">
+                      <div className="grid grid-cols-2 gap-3">
+                        {AVAILABLE_LANGUAGES.map((lang) => (
+                          <div
+                            key={lang.code}
+                            onClick={() => toggleLanguage(lang.code)}
+                            className={`glass glass-hover rounded-lg p-4 border transition-all cursor-pointer ${
+                              selectedLanguages.includes(lang.code)
+                                ? "border-secondary/50 bg-secondary/10"
+                                : "border-border/50"
+                            }`}
+                          >
+                            <div className="flex items-center gap-3">
+                              <Checkbox
+                                checked={selectedLanguages.includes(lang.code)}
+                                onCheckedChange={() => toggleLanguage(lang.code)}
+                              />
+                              <Label className="cursor-pointer font-medium">
+                                {lang.name}
+                              </Label>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </ScrollArea>
+                  </div>
 
                   <div className="mt-6 p-4 glass rounded-lg border border-border/50">
                     <div className="flex items-center justify-between">
@@ -197,7 +249,7 @@ export const CaptionModal = ({
                 {!captions && (
                   <Button
                     onClick={handleGenerate}
-                    disabled={selectedLanguages.length === 0 || isGenerating}
+                    disabled={selectedLanguages.length === 0 || !selectedAiModel || isGenerating}
                     className="flex-1 button-gradient"
                   >
                     {isGenerating ? (
@@ -205,7 +257,7 @@ export const CaptionModal = ({
                     ) : (
                       <>
                         <Languages className="w-4 h-4 mr-2" />
-                        Generate Captions
+                        Generate with {AI_MODELS.find(m => m.id === selectedAiModel)?.name}
                       </>
                     )}
                   </Button>

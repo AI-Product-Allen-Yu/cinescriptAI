@@ -22,7 +22,7 @@ interface VideoGenerationCardProps {
   index: number;
   onRetry: () => void;
   onRemoveWatermark?: () => void;
-  onGenerateCaptions?: (languages: string[]) => void;
+  onGenerateCaptions?: (languages: string[], aiModel: string) => void;
 }
 
 export const VideoGenerationCard = ({ 
@@ -245,8 +245,8 @@ export const VideoGenerationCard = ({
         <CaptionModal
           isOpen={showCaptionModal}
           onClose={() => setShowCaptionModal(false)}
-          onGenerate={(languages) => {
-            onGenerateCaptions?.(languages);
+          onGenerate={(languages, aiModel) => {
+            onGenerateCaptions?.(languages, aiModel);
             setShowCaptionModal(false);
           }}
           captions={job.captions}

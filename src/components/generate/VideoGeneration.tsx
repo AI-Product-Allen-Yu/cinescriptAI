@@ -139,7 +139,7 @@ export const VideoGeneration = ({ selectedIdeas, onBack }: VideoGenerationProps)
     }, 3000);
   };
 
-  const handleGenerateCaptions = (ideaId: string, languages: string[]) => {
+  const handleGenerateCaptions = (ideaId: string, languages: string[], aiModel: string) => {
     setJobs((prev) => {
       const newJobs = new Map(prev);
       const job = newJobs.get(ideaId);
@@ -176,7 +176,7 @@ export const VideoGeneration = ({ selectedIdeas, onBack }: VideoGenerationProps)
       setTotalCreditsUsed((prev) => prev + captionCredits);
       toast({
         title: "Captions generated",
-        description: `Created captions in ${languages.length} language(s)`,
+        description: `Created captions in ${languages.length} language(s) using ${aiModel.toUpperCase()}`,
       });
     }, 4000);
   };
@@ -241,7 +241,7 @@ export const VideoGeneration = ({ selectedIdeas, onBack }: VideoGenerationProps)
                 index={index}
                 onRetry={() => handleRetry(idea.id)}
                 onRemoveWatermark={() => handleRemoveWatermark(idea.id)}
-                onGenerateCaptions={(languages) => handleGenerateCaptions(idea.id, languages)}
+                onGenerateCaptions={(languages, aiModel) => handleGenerateCaptions(idea.id, languages, aiModel)}
               />
             );
           })}
