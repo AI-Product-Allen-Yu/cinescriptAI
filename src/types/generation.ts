@@ -5,6 +5,7 @@ export interface GenerationData {
   directPromptText?: string;
   story?: string;
   brandValues?: string[];
+  accountLink?: string;
   tone?: "funny" | "inspirational" | "educational" | "professional";
 }
 

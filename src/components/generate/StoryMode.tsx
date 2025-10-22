@@ -4,6 +4,8 @@ import { Sparkles, Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import type { GenerationData } from "@/types/generation";
 
@@ -15,8 +17,10 @@ interface StoryModeProps {
 
 export const StoryMode = ({ onProceed }: StoryModeProps) => {
   const [story, setStory] = useState("");
+  const [inputType, setInputType] = useState<"brand_values" | "account_link">("brand_values");
   const [brandValues, setBrandValues] = useState<string[]>([]);
   const [newValue, setNewValue] = useState("");
+  const [accountLink, setAccountLink] = useState("");
   const [selectedTone, setSelectedTone] = useState<typeof TONE_OPTIONS[number] | null>(null);
   const { toast } = useToast();
 
@@ -53,7 +57,7 @@ export const StoryMode = ({ onProceed }: StoryModeProps) => {
     onProceed({
       mode: "story_mode",
       story,
-      brandValues,
+      ...(inputType === "brand_values" ? { brandValues } : { accountLink }),
       tone: selectedTone,
     });
   };
@@ -89,53 +93,76 @@ export const StoryMode = ({ onProceed }: StoryModeProps) => {
           />
         </div>
 
-        {/* Brand Values */}
+        {/* Brand Values or Account Link */}
         <div>
-          <label className="block text-sm font-medium mb-2">
-            Brand Values <span className="text-muted-foreground font-normal">(Optional)</span>
+          <label className="block text-sm font-medium mb-3">
+            Brand Context <span className="text-muted-foreground font-normal">(Optional)</span>
           </label>
-          <div className="flex gap-2 mb-3">
-            <Input
-              placeholder="Add a brand value (e.g., Innovation)"
-              value={newValue}
-              onChange={(e) => setNewValue(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && handleAddValue()}
-              className="bg-background/50 border-border/50"
-              disabled={brandValues.length >= 5}
-            />
-            <Button
-              onClick={handleAddValue}
-              disabled={!newValue.trim() || brandValues.length >= 5}
-              size="icon"
-              variant="outline"
-              className="shrink-0"
-            >
-              <Plus className="w-4 h-4" />
-            </Button>
-          </div>
-          {brandValues.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {brandValues.map((value, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="glass px-3 py-1.5 rounded-full flex items-center gap-2 text-sm"
-                >
-                  <span>{value}</span>
-                  <button
-                    onClick={() => handleRemoveValue(index)}
-                    className="hover:text-destructive transition-colors"
-                  >
-                    <X className="w-3 h-3" />
-                  </button>
-                </motion.div>
-              ))}
+          
+          <RadioGroup value={inputType} onValueChange={(value: any) => setInputType(value)} className="mb-4">
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="brand_values" id="brand_values" />
+              <Label htmlFor="brand_values" className="cursor-pointer">Brand Values</Label>
             </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="account_link" id="account_link" />
+              <Label htmlFor="account_link" className="cursor-pointer">Account Link</Label>
+            </div>
+          </RadioGroup>
+
+          {inputType === "brand_values" ? (
+            <>
+              <div className="flex gap-2 mb-3">
+                <Input
+                  placeholder="Add a brand value (e.g., Innovation)"
+                  value={newValue}
+                  onChange={(e) => setNewValue(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && handleAddValue()}
+                  className="bg-background/50 border-border/50"
+                  disabled={brandValues.length >= 5}
+                />
+                <Button
+                  onClick={handleAddValue}
+                  disabled={!newValue.trim() || brandValues.length >= 5}
+                  size="icon"
+                  variant="outline"
+                  className="shrink-0"
+                >
+                  <Plus className="w-4 h-4" />
+                </Button>
+              </div>
+              {brandValues.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {brandValues.map((value, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="glass px-3 py-1.5 rounded-full flex items-center gap-2 text-sm"
+                    >
+                      <span>{value}</span>
+                      <button
+                        onClick={() => handleRemoveValue(index)}
+                        className="hover:text-destructive transition-colors"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+              <p className="text-xs text-muted-foreground mt-2">
+                {brandValues.length}/5 values added
+              </p>
+            </>
+          ) : (
+            <Input
+              placeholder="Enter account link (e.g., https://twitter.com/username)"
+              value={accountLink}
+              onChange={(e) => setAccountLink(e.target.value)}
+              className="bg-background/50 border-border/50"
+            />
           )}
-          <p className="text-xs text-muted-foreground mt-2">
-            {brandValues.length}/5 values added
-          </p>
         </div>
 
         {/* Tone Selection */}
