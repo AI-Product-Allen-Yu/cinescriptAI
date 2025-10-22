@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 import { VideoGenerationCard } from "./VideoGenerationCard";
 import type { ContentIdea, VideoGenerationJob } from "@/types/generation";
 
@@ -63,6 +64,7 @@ const simulateVideoGeneration = (
 export const VideoGeneration = ({ selectedIdeas, onBack }: VideoGenerationProps) => {
   const [jobs, setJobs] = useState<Map<string, VideoGenerationJob>>(new Map());
   const [totalCreditsUsed, setTotalCreditsUsed] = useState(0);
+  const { toast } = useToast();
 
   useEffect(() => {
     // Start generating videos for all selected ideas
@@ -101,6 +103,82 @@ export const VideoGeneration = ({ selectedIdeas, onBack }: VideoGenerationProps)
         });
       });
     }
+  };
+
+  const handleRemoveWatermark = (ideaId: string) => {
+    setJobs((prev) => {
+      const newJobs = new Map(prev);
+      const job = newJobs.get(ideaId);
+      if (job) {
+        newJobs.set(ideaId, { ...job, watermarkRemoving: true });
+      }
+      return newJobs;
+    });
+
+    // Simulate watermark removal
+    setTimeout(() => {
+      setJobs((prev) => {
+        const newJobs = new Map(prev);
+        const job = newJobs.get(ideaId);
+        if (job) {
+          newJobs.set(ideaId, {
+            ...job,
+            watermarkRemoving: false,
+            watermarkRemoved: true,
+            cleanVideoUrl: `https://example.com/clean-video-${ideaId}.mp4`,
+            creditsUsed: job.creditsUsed + 20,
+          });
+        }
+        return newJobs;
+      });
+      setTotalCreditsUsed((prev) => prev + 20);
+      toast({
+        title: "Watermark removed",
+        description: "Your video is now watermark-free!",
+      });
+    }, 3000);
+  };
+
+  const handleGenerateCaptions = (ideaId: string, languages: string[]) => {
+    setJobs((prev) => {
+      const newJobs = new Map(prev);
+      const job = newJobs.get(ideaId);
+      if (job) {
+        newJobs.set(ideaId, { ...job, captionGenerating: true });
+      }
+      return newJobs;
+    });
+
+    // Simulate caption generation
+    setTimeout(() => {
+      const mockCaptions = languages.map((lang) => ({
+        language: lang,
+        text: `This is a sample caption text for the video in ${lang}. It describes the visual content and spoken narration...`,
+        srtUrl: `https://example.com/captions-${ideaId}-${lang}.srt`,
+        vttUrl: `https://example.com/captions-${ideaId}-${lang}.vtt`,
+      }));
+
+      const captionCredits = languages.length * 5;
+
+      setJobs((prev) => {
+        const newJobs = new Map(prev);
+        const job = newJobs.get(ideaId);
+        if (job) {
+          newJobs.set(ideaId, {
+            ...job,
+            captionGenerating: false,
+            captions: mockCaptions,
+            creditsUsed: job.creditsUsed + captionCredits,
+          });
+        }
+        return newJobs;
+      });
+      setTotalCreditsUsed((prev) => prev + captionCredits);
+      toast({
+        title: "Captions generated",
+        description: `Created captions in ${languages.length} language(s)`,
+      });
+    }, 4000);
   };
 
   return (
@@ -162,6 +240,8 @@ export const VideoGeneration = ({ selectedIdeas, onBack }: VideoGenerationProps)
                 job={job}
                 index={index}
                 onRetry={() => handleRetry(idea.id)}
+                onRemoveWatermark={() => handleRemoveWatermark(idea.id)}
+                onGenerateCaptions={(languages) => handleGenerateCaptions(idea.id, languages)}
               />
             );
           })}

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { 
   Loader2, 
@@ -6,10 +7,13 @@ import {
   Download, 
   RefreshCw,
   Play,
-  Clock
+  Clock,
+  Sparkles,
+  Languages
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { CaptionModal } from "./CaptionModal";
 import type { ContentIdea, VideoGenerationJob } from "@/types/generation";
 
 interface VideoGenerationCardProps {
@@ -17,14 +21,19 @@ interface VideoGenerationCardProps {
   job?: VideoGenerationJob;
   index: number;
   onRetry: () => void;
+  onRemoveWatermark?: () => void;
+  onGenerateCaptions?: (languages: string[]) => void;
 }
 
 export const VideoGenerationCard = ({ 
   idea, 
   job, 
   index,
-  onRetry 
+  onRetry,
+  onRemoveWatermark,
+  onGenerateCaptions
 }: VideoGenerationCardProps) => {
+  const [showCaptionModal, setShowCaptionModal] = useState(false);
   const getStatusIcon = () => {
     if (!job) return <Clock className="w-5 h-5 text-muted-foreground" />;
     
@@ -123,17 +132,85 @@ export const VideoGenerationCard = ({
         )}
 
         {/* Actions */}
-        <div className="flex items-center gap-2 pt-2">
+        <div className="space-y-2 pt-2">
           {job?.status === "completed" && (
             <>
-              <Button variant="outline" className="flex-1">
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Remix
-              </Button>
-              <Button className="flex-1 button-gradient">
-                <Download className="w-4 h-4 mr-2" />
-                Download
-              </Button>
+              {/* Watermark Removal */}
+              {!job.watermarkRemoved && !job.watermarkRemoving && onRemoveWatermark && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={onRemoveWatermark}
+                  className="w-full"
+                >
+                  <Sparkles className="w-3 h-3 mr-2" />
+                  Remove Watermark (20 credits)
+                </Button>
+              )}
+              
+              {job.watermarkRemoving && (
+                <div className="glass rounded-lg p-3 border border-border/50">
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin text-secondary" />
+                    <span className="text-sm">Removing watermark...</span>
+                  </div>
+                </div>
+              )}
+
+              {job.watermarkRemoved && (
+                <div className="glass rounded-lg p-3 border border-secondary/50 bg-secondary/10">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-secondary" />
+                    <span className="text-sm font-medium">Watermark removed</span>
+                  </div>
+                </div>
+              )}
+
+              {/* Caption Generation */}
+              {!job.captions && !job.captionGenerating && onGenerateCaptions && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setShowCaptionModal(true)}
+                  className="w-full"
+                >
+                  <Languages className="w-3 h-3 mr-2" />
+                  Generate Captions (5 credits/lang)
+                </Button>
+              )}
+
+              {job.captionGenerating && (
+                <div className="glass rounded-lg p-3 border border-border/50">
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin text-secondary" />
+                    <span className="text-sm">Generating captions...</span>
+                  </div>
+                </div>
+              )}
+
+              {job.captions && job.captions.length > 0 && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setShowCaptionModal(true)}
+                  className="w-full"
+                >
+                  <Languages className="w-3 h-3 mr-2" />
+                  View Captions ({job.captions.length})
+                </Button>
+              )}
+
+              {/* Primary Actions */}
+              <div className="flex items-center gap-2">
+                <Button variant="outline" className="flex-1">
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  Remix
+                </Button>
+                <Button className="flex-1 button-gradient">
+                  <Download className="w-4 h-4 mr-2" />
+                  Download
+                </Button>
+              </div>
             </>
           )}
           
@@ -163,6 +240,19 @@ export const VideoGenerationCard = ({
           </div>
         </div>
       </div>
+
+      {job && (
+        <CaptionModal
+          isOpen={showCaptionModal}
+          onClose={() => setShowCaptionModal(false)}
+          onGenerate={(languages) => {
+            onGenerateCaptions?.(languages);
+            setShowCaptionModal(false);
+          }}
+          captions={job.captions}
+          isGenerating={job.captionGenerating}
+        />
+      )}
     </motion.div>
   );
 };

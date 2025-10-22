@@ -28,6 +28,18 @@ export interface VideoGenerationJob {
   videoUrl?: string;
   creditsUsed: number;
   estimatedCredits: number;
+  watermarkRemoved?: boolean;
+  watermarkRemoving?: boolean;
+  cleanVideoUrl?: string;
+  captions?: Caption[];
+  captionGenerating?: boolean;
+}
+
+export interface Caption {
+  language: string;
+  text: string;
+  srtUrl?: string;
+  vttUrl?: string;
 }
 
 export interface SoraOptions {
