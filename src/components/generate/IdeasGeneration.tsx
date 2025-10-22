@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 interface IdeasGenerationProps {
   generationData: GenerationData;
   onBack: () => void;
+  onProceed: (ideas: ContentIdea[]) => void;
 }
 
 // Mock AI-generated ideas for demonstration
@@ -64,7 +65,7 @@ const generateMockIdeas = (data: GenerationData): ContentIdea[] => {
   return baseIdeas;
 };
 
-export const IdeasGeneration = ({ generationData, onBack }: IdeasGenerationProps) => {
+export const IdeasGeneration = ({ generationData, onBack, onProceed }: IdeasGenerationProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [ideas, setIdeas] = useState<ContentIdea[]>([]);
   const [selectedIdeas, setSelectedIdeas] = useState<Set<string>>(new Set());
@@ -100,10 +101,8 @@ export const IdeasGeneration = ({ generationData, onBack }: IdeasGenerationProps
       return;
     }
 
-    toast({
-      title: "Generating videos...",
-      description: `Creating ${selectedIdeas.size} video${selectedIdeas.size > 1 ? "s" : ""} based on your selections.`,
-    });
+    const selectedIdeaObjects = ideas.filter(idea => selectedIdeas.has(idea.id));
+    onProceed(selectedIdeaObjects);
   };
 
   return (

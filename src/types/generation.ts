@@ -17,3 +17,20 @@ export interface ContentIdea {
   rationale: string;
   trend_based?: boolean;
 }
+
+export interface VideoGenerationJob {
+  id: string;
+  ideaId: string;
+  title: string;
+  status: "queued" | "generating" | "completed" | "failed";
+  progress: number;
+  videoUrl?: string;
+  creditsUsed: number;
+  estimatedCredits: number;
+}
+
+export interface SoraOptions {
+  resolution: string;
+  voice_style?: string;
+  duration_seconds: number;
+}

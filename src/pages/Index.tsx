@@ -5,25 +5,36 @@ import { Button } from "@/components/ui/button";
 import { DirectPromptMode } from "@/components/generate/DirectPromptMode";
 import { StoryMode } from "@/components/generate/StoryMode";
 import { IdeasGeneration } from "@/components/generate/IdeasGeneration";
-import type { GenerationData } from "@/types/generation";
+import { VideoGeneration } from "@/components/generate/VideoGeneration";
+import type { GenerationData, ContentIdea } from "@/types/generation";
 
 type Mode = "direct_prompt" | "story_mode" | null;
-type Step = "mode_selection" | "ideas_generation";
+type Step = "mode_selection" | "ideas_generation" | "video_generation";
 
 const Index = () => {
   const [selectedMode, setSelectedMode] = useState<Mode>(null);
   const [currentStep, setCurrentStep] = useState<Step>("mode_selection");
   const [generationData, setGenerationData] = useState<GenerationData | null>(null);
+  const [selectedIdeas, setSelectedIdeas] = useState<ContentIdea[]>([]);
 
   const handleProceedToIdeas = (data: GenerationData) => {
     setGenerationData(data);
     setCurrentStep("ideas_generation");
   };
 
+  const handleProceedToVideos = (ideas: ContentIdea[]) => {
+    setSelectedIdeas(ideas);
+    setCurrentStep("video_generation");
+  };
+
   const handleBackToMode = () => {
     setCurrentStep("mode_selection");
     setSelectedMode(null);
     setGenerationData(null);
+  };
+
+  const handleBackToIdeas = () => {
+    setCurrentStep("ideas_generation");
   };
 
   return (
@@ -122,10 +133,16 @@ const Index = () => {
                 <StoryMode onProceed={handleProceedToIdeas} />
               )}
             </div>
-          ) : (
+          ) : currentStep === "ideas_generation" ? (
             <IdeasGeneration 
               generationData={generationData!} 
               onBack={handleBackToMode}
+              onProceed={handleProceedToVideos}
+            />
+          ) : (
+            <VideoGeneration
+              selectedIdeas={selectedIdeas}
+              onBack={handleBackToIdeas}
             />
           )}
 
