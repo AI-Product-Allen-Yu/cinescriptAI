@@ -1,183 +1,125 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Command } from "lucide-react";
+import { Sparkles, Wand2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Navigation from "@/components/Navigation";
-import { FeaturesSection } from "@/components/features/FeaturesSection";
-import { PricingSection } from "@/components/pricing/PricingSection";
-import { CustomBuilder } from "@/components/CustomBuilder";
-import { MarketingServices } from "@/components/MarketingServices";
-import LogoCarousel from "@/components/LogoCarousel";
-import TestimonialsSection from "@/components/TestimonialsSection";
-import Footer from "@/components/Footer";
-import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
+import { DirectPromptMode } from "@/components/generate/DirectPromptMode";
+import { StoryMode } from "@/components/generate/StoryMode";
+
+type Mode = "direct_prompt" | "story_mode" | null;
 
 const Index = () => {
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      const yOffset = -100; // Offset for fixed header
-      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({ top: y, behavior: "smooth" });
-    }
-  };
+  const [selectedMode, setSelectedMode] = useState<Mode>(null);
 
   return (
-    <div className="min-h-screen bg-black text-foreground">
-      <Navigation />
-      
-      {/* Hero Section */}
-      <motion.section 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="relative container px-4 pt-40 pb-20"
-      >
-        {/* Background */}
-        <div 
-          className="absolute inset-0 -z-10 bg-[#0A0A0A] geometric-pattern"
-        />
-        
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="inline-block mb-4 px-4 py-1.5 rounded-full glass neon-glow"
-        >
-          <span className="text-sm font-medium">
-            <Command className="w-4 h-4 inline-block mr-2" />
-            Futuristic Website & Marketing Agency
-          </span>
-        </motion.div>
-        
-        <div className="max-w-4xl relative z-10">
-          <h1 className="text-5xl md:text-7xl font-normal mb-4 tracking-tight text-left">
-            <span className="text-gradient">
-              <TextGenerateEffect words="Growth Spire" />
-            </span>
-            <br />
-            <span className="text-white font-medium">
-              <TextGenerateEffect words="Website & Marketing Agency" />
-            </span>
-          </h1>
-          
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl text-left"
-          >
-            Building Digital Success Stories with cutting-edge websites and powerful marketing strategies.{" "}
-            <span className="text-white">Transform your business today.</span>
-          </motion.p>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="flex flex-col sm:flex-row gap-4 items-start"
-          >
-            <Button 
-              size="lg" 
-              className="button-gradient"
-              onClick={() => scrollToSection("pricing")} // Scroll to pricing section
-            >
-              Get Started Now
-            </Button>
-            <Button 
-              size="lg" 
-              variant="link" 
-              className="text-white"
-              rel="noopener noreferrer" 
-            >
-              View Portfolio <ArrowRight className="ml-2 w-4 h-4" />
-            </Button>
-          </motion.div>
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="relative mx-auto max-w-5xl mt-20"
-        >
-          <div className="glass rounded-xl overflow-hidden">
-            <img
-              src="/lovable-uploads/c32c6788-5e4a-4fee-afee-604b03113c7f.png"
-              alt="CryptoTrade Dashboard"
-              className="w-full h-auto"
-            />
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/50">
+        <div className="container px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-6 h-6 text-primary" />
+            <span className="text-xl font-semibold">AI Video Studio</span>
           </div>
-        </motion.div>
-      </motion.section>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <span className="hidden sm:inline">Credits:</span>
+            <span className="font-semibold text-foreground">127</span>
+          </div>
+        </div>
+      </header>
 
-      {/* Logo Carousel */}
-      <LogoCarousel />
-
-      {/* Features Section */}
-      <div id="features" className="bg-black">
-        <FeaturesSection />
-      </div>
-
-      {/* Pricing Section */}
-      <div id="pricing" className="bg-black">
-        <PricingSection />
-      </div>
-
-      {/* Custom Builder Section */}
-      <div id="builder" className="bg-black">
-        <CustomBuilder />
-      </div>
-
-      {/* Marketing Services Section */}
-      <div id="marketing" className="bg-black">
-        <MarketingServices />
-      </div>
-
-      {/* Testimonials Section */}
-      <div className="bg-black">
-        <TestimonialsSection />
-      </div>
-
-      {/* CTA Section */}
-      <section className="container px-4 py-20 relative bg-black">
-        <div 
-          className="absolute inset-0 opacity-40"
-          style={{
-            backgroundImage: 'url("/lovable-uploads/21f3edfb-62b5-4e35-9d03-7339d803b980.png")',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        />
+      {/* Main Content */}
+      <main className="container px-4 pt-32 pb-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg-[#0A0A0A]/80 backdrop-blur-lg border border-white/10 rounded-2xl p-8 md:p-12 text-center relative z-10"
+          className="max-w-4xl mx-auto"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Ready to transform your business?
-          </h2>
-          <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Join hundreds of businesses who have already transformed their digital presence with our solutions.
-          </p>
-          <Button 
-            size="lg" 
-            className="button-gradient neon-glow"
-            onClick={() => {
-              const message = "Hi Saurav! I'm ready to transform my business. Let's discuss my project requirements.";
-              window.open(`https://wa.me/9779813984912?text=${encodeURIComponent(message)}`, '_blank');
-            }}
-          >
-            Start Your Project
-            <ArrowRight className="ml-2 w-4 h-4" />
-          </Button>
-        </motion.div>
-      </section>
+          {/* Title Section */}
+          <div className="text-center mb-12">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+              <span className="text-gradient">Generate Your Video</span>
+            </h1>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Choose how you want to create your video: write a direct prompt or let AI craft ideas from your story.
+            </p>
+          </div>
 
-      {/* Footer */}
-      <div className="bg-black">
-        <Footer />
-      </div>
+          {/* Mode Selection or Selected Mode */}
+          {!selectedMode ? (
+            <div className="grid md:grid-cols-2 gap-6 mb-8">
+              {/* Direct Prompt Card */}
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setSelectedMode("direct_prompt")}
+                className="glass glass-hover rounded-2xl p-8 text-left border border-border/50 transition-all hover:border-primary/50"
+              >
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                  <Wand2 className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Direct Prompt</h3>
+                <p className="text-muted-foreground mb-4">
+                  Write your own prompt and skip straight to video generation.
+                </p>
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="text-muted-foreground">Fastest path</span>
+                  <div className="h-1 w-1 rounded-full bg-muted-foreground" />
+                  <span className="text-primary font-medium">~3 credits</span>
+                </div>
+              </motion.button>
+
+              {/* Story Mode Card */}
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setSelectedMode("story_mode")}
+                className="glass glass-hover rounded-2xl p-8 text-left border border-border/50 transition-all hover:border-secondary/50"
+              >
+                <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center mb-4">
+                  <Sparkles className="w-6 h-6 text-secondary" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Get Prompt Ideas</h3>
+                <p className="text-muted-foreground mb-4">
+                  Share your story and brand values, let AI refine ideas for you.
+                </p>
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="text-muted-foreground">AI-powered</span>
+                  <div className="h-1 w-1 rounded-full bg-muted-foreground" />
+                  <span className="text-secondary font-medium">~3 credits</span>
+                </div>
+              </motion.button>
+            </div>
+          ) : (
+            <div className="mb-8">
+              <Button
+                variant="ghost"
+                onClick={() => setSelectedMode(null)}
+                className="mb-6 text-muted-foreground hover:text-foreground"
+              >
+                ← Change Mode
+              </Button>
+
+              {selectedMode === "direct_prompt" && <DirectPromptMode />}
+              {selectedMode === "story_mode" && <StoryMode />}
+            </div>
+          )}
+
+          {/* Credit Estimate Footer */}
+          {selectedMode && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="glass rounded-xl p-4 flex items-center justify-between border border-border/50"
+            >
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Sparkles className="w-4 h-4" />
+                <span>Next step cost estimate</span>
+              </div>
+              <span className="text-lg font-semibold text-primary">3 credits</span>
+            </motion.div>
+          )}
+        </motion.div>
+      </main>
     </div>
   );
 };
