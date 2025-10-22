@@ -59,22 +59,24 @@ export default function Generate() {
               </div>
 
               {/* Mode Selection */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-                {!generationData?.mode ? (
-                  <>
-                    <div onClick={() => handleModeSelect("direct_prompt")}>
-                      <DirectPromptMode onProceed={handleProceedToIdeas} />
-                    </div>
-                    <div onClick={() => handleModeSelect("story_mode")}>
-                      <StoryMode onProceed={handleProceedToIdeas} />
-                    </div>
-                  </>
-                ) : generationData.mode === "direct_prompt" ? (
-                  <DirectPromptMode onProceed={handleProceedToIdeas} />
-                ) : (
-                  <StoryMode onProceed={handleProceedToIdeas} />
-                )}
-              </div>
+              {!generationData?.mode ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                  <div onClick={() => handleModeSelect("direct_prompt")}>
+                    <DirectPromptMode onProceed={handleProceedToIdeas} />
+                  </div>
+                  <div onClick={() => handleModeSelect("story_mode")}>
+                    <StoryMode onProceed={handleProceedToIdeas} />
+                  </div>
+                </div>
+              ) : (
+                <div className="max-w-4xl mx-auto">
+                  {generationData.mode === "direct_prompt" ? (
+                    <DirectPromptMode onProceed={handleProceedToIdeas} />
+                  ) : (
+                    <StoryMode onProceed={handleProceedToIdeas} />
+                  )}
+                </div>
+              )}
             </motion.div>
           )}
 
