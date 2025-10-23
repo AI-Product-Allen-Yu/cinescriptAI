@@ -109,10 +109,10 @@ const Navigation = () => {
 
             {session ? (
               <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                {/* <div className="flex items-center gap-1 text-xs text-muted-foreground">
                   <User className="w-3 h-3" />
                   {session.user.email?.split('@')[0]}
-                </div>
+                </div> */}
                 <Button onClick={handleSignOut} variant="outline" size="sm">
                   <LogOut className="w-3 h-3 mr-1" />
                   Sign Out
