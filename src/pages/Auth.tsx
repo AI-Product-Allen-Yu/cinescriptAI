@@ -1,13 +1,20 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Mail, Lock, Loader2, Chrome } from "lucide-react";
+import { Mail, Lock, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 import { z } from "zod";
+import { 
+  signInWithPopup, 
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut
+} from "firebase/auth";
+import { auth, googleProvider, facebookProvider } from "@/lib/firebase";
 
 const authSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -23,21 +30,17 @@ export default function Auth() {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Check if user is already logged in
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
+    // Listen for auth state changes
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in
+        console.log("User logged in:", user.email);
         navigate("/");
       }
     });
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) {
-        navigate("/");
-      }
-    });
-
-    return () => subscription.unsubscribe();
+    // Cleanup subscription
+    return () => unsubscribe();
   }, [navigate]);
 
   const handleEmailAuth = async (e: React.FormEvent) => {
@@ -61,57 +64,57 @@ export default function Auth() {
 
     try {
       if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
+        // Sign in with email and password
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        
+        toast({
+          title: "Welcome back!",
+          description: `Logged in as ${userCredential.user.email}`,
         });
-
-        if (error) {
-          if (error.message.includes("Invalid login credentials")) {
-            toast({
-              title: "Login Failed",
-              description: "Invalid email or password. Please try again.",
-              variant: "destructive",
-            });
-          } else {
-            throw error;
-          }
-        } else {
-          toast({
-            title: "Welcome back!",
-            description: "You've successfully logged in.",
-          });
-        }
       } else {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: `${window.location.origin}/`,
-          },
+        // Sign up with email and password
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        
+        toast({
+          title: "Account Created!",
+          description: `Welcome ${userCredential.user.email}!`,
         });
-
-        if (error) {
-          if (error.message.includes("User already registered")) {
-            toast({
-              title: "Account Exists",
-              description: "This email is already registered. Please login instead.",
-              variant: "destructive",
-            });
-          } else {
-            throw error;
-          }
-        } else {
-          toast({
-            title: "Account Created!",
-            description: "You've successfully signed up. Welcome!",
-          });
-        }
       }
     } catch (error: any) {
+      console.error("Auth error:", error);
+      
+      // Handle specific Firebase errors
+      let errorMessage = "An error occurred. Please try again.";
+      
+      switch (error.code) {
+        case "auth/email-already-in-use":
+          errorMessage = "This email is already registered. Please login instead.";
+          break;
+        case "auth/invalid-email":
+          errorMessage = "Invalid email address.";
+          break;
+        case "auth/user-not-found":
+          errorMessage = "No account found with this email.";
+          break;
+        case "auth/wrong-password":
+          errorMessage = "Incorrect password. Please try again.";
+          break;
+        case "auth/weak-password":
+          errorMessage = "Password is too weak. Use at least 6 characters.";
+          break;
+        case "auth/too-many-requests":
+          errorMessage = "Too many failed attempts. Please try again later.";
+          break;
+        case "auth/invalid-credential":
+          errorMessage = "Invalid email or password.";
+          break;
+        default:
+          errorMessage = error.message;
+      }
+      
       toast({
-        title: "Error",
-        description: error.message || "An error occurred. Please try again.",
+        title: isLogin ? "Login Failed" : "Sign Up Failed",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -122,20 +125,42 @@ export default function Auth() {
   const handleGoogleAuth = async () => {
     setLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: `${window.location.origin}/`,
-        },
-      });
-
-      if (error) throw error;
-    } catch (error: any) {
+      const result = await signInWithPopup(auth, googleProvider);
+      
       toast({
-        title: "Error",
-        description: error.message || "Failed to sign in with Google",
+        title: "Success!",
+        description: `Welcome ${result.user.displayName || result.user.email}!`,
+      });
+      
+      // User will be redirected by onAuthStateChanged
+    } catch (error: any) {
+      console.error("Google auth error:", error);
+      
+      let errorMessage = "Failed to sign in with Google";
+      
+      switch (error.code) {
+        case "auth/popup-closed-by-user":
+          errorMessage = "Sign-in popup was closed. Please try again.";
+          break;
+        case "auth/cancelled-popup-request":
+          errorMessage = "Sign-in was cancelled.";
+          break;
+        case "auth/popup-blocked":
+          errorMessage = "Sign-in popup was blocked. Please allow popups and try again.";
+          break;
+        case "auth/account-exists-with-different-credential":
+          errorMessage = "An account already exists with the same email address.";
+          break;
+        default:
+          errorMessage = error.message;
+      }
+      
+      toast({
+        title: "Google Sign-In Failed",
+        description: errorMessage,
         variant: "destructive",
       });
+    } finally {
       setLoading(false);
     }
   };
@@ -143,20 +168,42 @@ export default function Auth() {
   const handleFacebookAuth = async () => {
     setLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "facebook",
-        options: {
-          redirectTo: `${window.location.origin}/`,
-        },
-      });
-
-      if (error) throw error;
-    } catch (error: any) {
+      const result = await signInWithPopup(auth, facebookProvider);
+      
       toast({
-        title: "Error",
-        description: error.message || "Failed to sign in with Facebook",
+        title: "Success!",
+        description: `Welcome ${result.user.displayName || result.user.email}!`,
+      });
+      
+      // User will be redirected by onAuthStateChanged
+    } catch (error: any) {
+      console.error("Facebook auth error:", error);
+      
+      let errorMessage = "Failed to sign in with Facebook";
+      
+      switch (error.code) {
+        case "auth/popup-closed-by-user":
+          errorMessage = "Sign-in popup was closed. Please try again.";
+          break;
+        case "auth/cancelled-popup-request":
+          errorMessage = "Sign-in was cancelled.";
+          break;
+        case "auth/popup-blocked":
+          errorMessage = "Sign-in popup was blocked. Please allow popups and try again.";
+          break;
+        case "auth/account-exists-with-different-credential":
+          errorMessage = "An account already exists with the same email address.";
+          break;
+        default:
+          errorMessage = error.message;
+      }
+      
+      toast({
+        title: "Facebook Sign-In Failed",
+        description: errorMessage,
         variant: "destructive",
       });
+    } finally {
       setLoading(false);
     }
   };
@@ -254,7 +301,6 @@ export default function Auth() {
             </div>
 
             {/* OAuth Buttons */}
-            {/* OAuth Buttons */}
             <div className="grid grid-cols-2 gap-3">
               <Button
                 type="button"
@@ -286,7 +332,6 @@ export default function Auth() {
               </Button>
             </div>
 
-            
             {/* Toggle Login/Signup */}
             <div className="mt-6 text-center text-sm">
               <button
