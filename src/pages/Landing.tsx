@@ -45,23 +45,43 @@ const PROCESS_STEPS = [
 
 const PRICING_PACKAGES = [
   {
-    name: "Starter",
+    name: "Basic",
     credits: 50,
-    price: "$29",
+    price: "$9",
     features: ["50 credits", "Basic support", "All features", "1 user"],
   },
   {
-    name: "Pro",
-    credits: 150,
-    price: "$79",
+    name: "Starter",
+    credits: 110,
+    price: "$19",
     popular: true,
-    features: ["150 credits", "Priority support", "All features", "3 users", "API access"],
+    features: ["110 credits", "Priority support", "All features", "1 users", "API access"],
+  },
+  {
+    name: "Popular",
+    credits: 170,
+    price: "$29",
+    popular: true,
+    features: ["170 credits", "Priority support", "All features", "3 users", "API access"],
+  },
+  {
+    name: "Pro",
+    credits: 300,
+    price: "$49",
+    popular: true,
+    features: ["300 credits", "Priority support", "All features", "3 users", "API access"],
+  },
+  {
+    name: "Team",
+    credits: 650,
+    price: "$99",
+    features: ["650 credits", "24/7 support", "All features", "Unlimited users", "API access", "Custom integration"],
   },
   {
     name: "Enterprise",
-    credits: 500,
-    price: "$249",
-    features: ["500 credits", "24/7 support", "All features", "Unlimited users", "API access", "Custom integration"],
+    credits: 2000,
+    price: "$299",
+    features: ["2000 credits", "24/7 support", "All features", "Unlimited users", "API access", "Custom integration"],
   },
 ];
 
