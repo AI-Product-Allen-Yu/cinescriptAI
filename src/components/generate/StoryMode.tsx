@@ -1,79 +1,41 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, Plus, X, BookOpen, Target, Zap, Lightbulb, Link2, Tag } from "lucide-react";
+import { Sparkles, Plus, X, Link2, Tag, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import type { GenerationData } from "@/types/generation";
 
 const TONE_OPTIONS = ["funny", "inspirational", "educational", "professional"] as const;
-
-const exampleStories = [
-  {
-    icon: BookOpen,
-    title: "Product Launch",
-    story: "We're launching an eco-friendly water bottle that keeps drinks cold for 48 hours. Our mission is to reduce plastic waste while providing superior quality.",
-    brandValues: ["Sustainability", "Innovation", "Quality"],
-    color: "from-blue-500/20 to-cyan-500/20"
-  },
-  {
-    icon: Target,
-    title: "Brand Story",
-    story: "A family-owned bakery celebrating 50 years of tradition. We use grandmother's recipes and locally-sourced ingredients to create authentic pastries.",
-    brandValues: ["Tradition", "Authenticity", "Community"],
-    color: "from-amber-500/20 to-orange-500/20"
-  },
-  {
-    icon: Zap,
-    title: "Service Highlight",
-    story: "Our fitness app uses AI to create personalized workout plans. We help busy professionals stay fit with just 15 minutes a day.",
-    brandValues: ["Technology", "Health", "Efficiency"],
-    color: "from-purple-500/20 to-pink-500/20"
-  }
-];
 
 interface StoryModeProps {
   onProceed: (data: GenerationData) => void;
 }
 
 export const StoryMode = ({ onProceed }: StoryModeProps) => {
-  const [story, setStory] = useState("");
-  const [inputType, setInputType] = useState<"brand_values" | "account_link">("brand_values");
-  const [brandValues, setBrandValues] = useState<string[]>([]);
+  const [inputType, setInputType] = useState<"keyword" | "account_link">("keyword");
+  const [keywords, setKeywords] = useState<string[]>([]);
   const [newValue, setNewValue] = useState("");
   const [accountLink, setAccountLink] = useState("");
   const [selectedTone, setSelectedTone] = useState<typeof TONE_OPTIONS[number] | null>(null);
   const { toast } = useToast();
 
   const handleAddValue = () => {
-    if (newValue.trim() && brandValues.length < 5) {
-      setBrandValues([...brandValues, newValue.trim()]);
+    if (newValue.trim() && keywords.length < 5) {
+      setKeywords([...keywords, newValue.trim()]);
       setNewValue("");
     }
   };
 
   const handleRemoveValue = (index: number) => {
-    setBrandValues(brandValues.filter((_, i) => i !== index));
-  };
-
-  const handleExampleClick = (example: typeof exampleStories[0]) => {
-    setStory(example.story);
-    setBrandValues(example.brandValues);
-    setInputType("brand_values");
-    toast({
-      title: "Example loaded",
-      description: "Feel free to edit the story and values as needed.",
-    });
+    setKeywords(keywords.filter((_, i) => i !== index));
   };
 
   const handleGenerateIdeas = () => {
-    if (!story.trim()) {
+    if (!accountLink.trim() && keywords.length === 0) {
       toast({
-        title: "Story required",
-        description: "Please share your story to get prompt ideas.",
+        title: "Input required",
+        description: "Please provide an account link or some keywords first.",
         variant: "destructive",
       });
       return;
@@ -82,16 +44,15 @@ export const StoryMode = ({ onProceed }: StoryModeProps) => {
     if (!selectedTone) {
       toast({
         title: "Tone required",
-        description: "Please select a tone for your video.",
+        description: "Please select a tone for your content.",
         variant: "destructive",
       });
       return;
     }
 
     onProceed({
-      mode: "story_mode",
-      story,
-      ...(inputType === "brand_values" ? { brandValues } : { accountLink }),
+      mode: "reverse_engineer",
+      ...(inputType === "keyword" ? { keywords } : { accountLink }),
       tone: selectedTone,
     });
   };
@@ -107,36 +68,14 @@ export const StoryMode = ({ onProceed }: StoryModeProps) => {
           <Sparkles className="w-5 h-5 text-secondary" />
         </div>
         <div>
-          <h2 className="text-2xl font-semibold">Story Mode</h2>
-          <p className="text-sm text-muted-foreground">Let AI craft ideas from your story</p>
+          <h2 className="text-2xl font-semibold">Reverse Engineer the Photo/Video</h2>
+          <p className="text-sm text-muted-foreground">
+            Enter a social link or keywords to let AI analyze and understand the content style.
+          </p>
         </div>
       </div>
 
-      {/* Example Cards */}
-      <div className="mb-6">
-        <h3 className="text-sm font-medium mb-3 text-muted-foreground">Example Stories</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {exampleStories.map((example, index) => (
-            <motion.button
-              key={index}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              onClick={() => handleExampleClick(example)}
-              className={`group relative p-4 rounded-xl border border-border/50 bg-gradient-to-br ${example.color} hover:border-secondary/50 transition-all duration-300 text-left overflow-hidden`}
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-secondary/0 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <div className="relative">
-                <example.icon className="w-5 h-5 mb-2 text-secondary" />
-                <h4 className="font-medium text-sm mb-2">{example.title}</h4>
-                <p className="text-xs text-muted-foreground line-clamp-3">{example.story}</p>
-              </div>
-            </motion.button>
-          ))}
-        </div>
-      </div>
-
-      {/* Instructions Card */}
+      {/* Instructions */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -145,61 +84,44 @@ export const StoryMode = ({ onProceed }: StoryModeProps) => {
       >
         <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
           <Lightbulb className="w-5 h-5 text-secondary" />
-          How to Share Your Story
+          How It Works
         </h3>
         <div className="space-y-3 text-sm text-muted-foreground">
           <p>
-            <strong className="text-foreground">Tell Your Journey:</strong> Share your brand's mission, product features, or the problem you're solving. Be authentic and specific.
+            <strong className="text-foreground">Paste a Link:</strong> Share your photo/video or profile
+            link so AI can reverse-engineer its visual tone and context.
           </p>
           <p>
-            <strong className="text-foreground">Add Context:</strong> Include brand values (keywords that define you) or link your social account for AI to understand your style.
+            <strong className="text-foreground">Use Keywords:</strong> Alternatively, enter keywords that describe
+            your visual style or topic (e.g., “luxury skincare”, “travel vlog”).
           </p>
           <p>
-            <strong className="text-foreground">Choose Your Tone:</strong> Select how you want your message delivered - funny, inspirational, educational, or professional.
-          </p>
-          <p>
-            <strong className="text-foreground">Get AI Ideas:</strong> Our AI will analyze your story and generate multiple video prompt ideas tailored to your brand.
+            <strong className="text-foreground">Select Tone:</strong> Choose how you want your message or
+            video style to sound.
           </p>
         </div>
       </motion.div>
 
+      {/* Account Link / Keywords Input */}
       <div className="space-y-6">
-        {/* Story Input */}
         <div>
-          <label htmlFor="story" className="block text-sm font-medium mb-2">
-            Your Story
-          </label>
-          <Textarea
-            id="story"
-            placeholder="Tell us about your brand, product, or the message you want to convey..."
-            value={story}
-            onChange={(e) => setStory(e.target.value)}
-            className="min-h-[150px] resize-none bg-background/50 border-border/50 focus:border-secondary"
-          />
-        </div>
-
-        {/* Brand Values or Account Link */}
-        <div>
-          <label className="block text-sm font-medium mb-3">
-            Brand Context <span className="text-muted-foreground font-normal">(Optional)</span>
-          </label>
-          
+          <label className="block text-sm font-medium mb-3">Choose Input Type</label>
           <div className="grid grid-cols-2 gap-3 mb-4">
             <button
-              onClick={() => setInputType("brand_values")}
+              onClick={() => setInputType("keyword")}
               className={`p-4 rounded-xl border transition-all text-left ${
-                inputType === "brand_values"
+                inputType === "keyword"
                   ? "border-secondary/50 bg-secondary/10"
                   : "border-border/50 bg-background/30 hover:bg-background/50"
               }`}
             >
               <div className="flex items-center gap-2 mb-2">
                 <Tag className="w-4 h-4 text-secondary" />
-                <span className="font-medium text-sm">Brand Values</span>
+                <span className="font-medium text-sm">Keywords</span>
               </div>
-              <p className="text-xs text-muted-foreground">Add keywords that define your brand</p>
+              <p className="text-xs text-muted-foreground">Describe your content style</p>
             </button>
-            
+
             <button
               onClick={() => setInputType("account_link")}
               className={`p-4 rounded-xl border transition-all text-left ${
@@ -212,24 +134,24 @@ export const StoryMode = ({ onProceed }: StoryModeProps) => {
                 <Link2 className="w-4 h-4 text-secondary" />
                 <span className="font-medium text-sm">Account Link</span>
               </div>
-              <p className="text-xs text-muted-foreground">Link your social media profile</p>
+              <p className="text-xs text-muted-foreground">Paste your social media link</p>
             </button>
           </div>
 
-          {inputType === "brand_values" ? (
+          {inputType === "keyword" ? (
             <div className="p-4 rounded-xl border border-border/50 bg-background/30">
               <div className="flex gap-2 mb-3">
                 <Input
-                  placeholder="Add a brand value (e.g., Innovation, Quality)"
+                  placeholder="Add a keyword (e.g., luxury, skincare, vlog)"
                   value={newValue}
                   onChange={(e) => setNewValue(e.target.value)}
                   onKeyPress={(e) => e.key === "Enter" && handleAddValue()}
                   className="bg-background/50 border-border/50"
-                  disabled={brandValues.length >= 5}
+                  disabled={keywords.length >= 5}
                 />
                 <Button
                   onClick={handleAddValue}
-                  disabled={!newValue.trim() || brandValues.length >= 5}
+                  disabled={!newValue.trim() || keywords.length >= 5}
                   size="icon"
                   variant="outline"
                   className="shrink-0"
@@ -237,9 +159,9 @@ export const StoryMode = ({ onProceed }: StoryModeProps) => {
                   <Plus className="w-4 h-4" />
                 </Button>
               </div>
-              {brandValues.length > 0 && (
+              {keywords.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-2">
-                  {brandValues.map((value, index) => (
+                  {keywords.map((value, index) => (
                     <motion.div
                       key={index}
                       initial={{ opacity: 0, scale: 0.8 }}
@@ -257,20 +179,18 @@ export const StoryMode = ({ onProceed }: StoryModeProps) => {
                   ))}
                 </div>
               )}
-              <p className="text-xs text-muted-foreground">
-                {brandValues.length}/5 values added
-              </p>
+              <p className="text-xs text-muted-foreground">{keywords.length}/5 keywords added</p>
             </div>
           ) : (
             <div className="p-4 rounded-xl border border-border/50 bg-background/30">
               <Input
-                placeholder="https://twitter.com/username or https://instagram.com/username"
+                placeholder="https://instagram.com/username or https://tiktok.com/@user"
                 value={accountLink}
                 onChange={(e) => setAccountLink(e.target.value)}
                 className="bg-background/50 border-border/50"
               />
               <p className="text-xs text-muted-foreground mt-2">
-                Paste your social media profile URL
+                Paste your social media profile or content URL
               </p>
             </div>
           )}
@@ -278,9 +198,7 @@ export const StoryMode = ({ onProceed }: StoryModeProps) => {
 
         {/* Tone Selection */}
         <div>
-          <label className="block text-sm font-medium mb-3">
-            Select Tone
-          </label>
+          <label className="block text-sm font-medium mb-3">Select Tone</label>
           <div className="grid grid-cols-2 gap-3">
             {TONE_OPTIONS.map((tone) => (
               <button
@@ -300,14 +218,27 @@ export const StoryMode = ({ onProceed }: StoryModeProps) => {
 
         <Button
           onClick={handleGenerateIdeas}
-          disabled={!story.trim() || !selectedTone}
+          disabled={
+            (!accountLink.trim() && keywords.length === 0) || !selectedTone
+          }
           className="w-full button-gradient neon-glow"
           size="lg"
         >
           <Sparkles className="w-5 h-5 mr-2" />
-          Get Prompt Ideas
+          Reverse Engineer
         </Button>
       </div>
+
+      {/* ---------------- STORY MODE (Step 2) COMMENTED OUT ---------------- */}
+      {/*
+      <div className="mt-10">
+        <h2 className="text-xl font-semibold mb-4">Story Mode (Coming Soon)</h2>
+        <p className="text-muted-foreground text-sm">
+          This step will allow you to tell your brand’s story and let AI generate deeper
+          creative narratives. Currently disabled.
+        </p>
+      </div>
+      */}
     </motion.div>
   );
 };
