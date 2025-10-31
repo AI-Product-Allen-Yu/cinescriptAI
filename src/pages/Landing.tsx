@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
+import { useNavigate } from "react-router-dom";
 
 const PROCESS_STEPS = [
   {
@@ -37,6 +38,14 @@ const PROCESS_STEPS = [
     description: "Auto-schedule to TikTok, Instagram, YouTube",
     step: 5,
   },
+];
+
+const CREDIT_PACKAGES = [
+  { credits: 330, price: 5 },
+  { credits: 660, price: 10 },
+  { credits: 1320, price: 20 },
+  { credits: 2640, price: 40 },
+  { credits: 5280, price: 80 },
 ];
 
 const PRICING_PACKAGES = [
@@ -124,6 +133,14 @@ export default function Landing() {
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showCredits, setShowCredits] = useState(false);
+  const [customCredits, setCustomCredits] = useState("");
+  const navigate = useNavigate();
+
+  const calculateCustomPrice = (credits) => {
+    const numCredits = parseInt(credits) || 0;
+    return (numCredits / 10).toFixed(2);
+  };
 
   const handleContactSubmit = async () => {
     if (!contactForm.name || !contactForm.email || !contactForm.message) {
@@ -141,52 +158,221 @@ export default function Landing() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Hero Section */}
-      <section id="home" className="relative min-h-screen flex items-center justify-center px-4 pt-20">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent" />
+      <section id="home" className="relative min-h-screen flex items-center justify-center px-4 pt-20 bg-gray-950">
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-900/10 via-transparent to-transparent" />
         
-        <div className="container mx-auto relative z-10">
-          <div className="text-center max-w-4xl mx-auto">
-            <div className="inline-block mb-6">
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 text-sm bg-background/50 backdrop-blur">
-                <Sparkles className="w-4 h-4 text-primary" />
+        <div className="container mx-auto relative z-10 max-w-7xl">
+          {/* Badge */}
+          <div className="text-center mb-8">
+            <div className="inline-block">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-blue-500/30 text-sm bg-blue-500/10 backdrop-blur text-blue-400">
+                <Sparkles className="w-4 h-4" />
                 AI-Powered Video Creation
               </span>
             </div>
+          </div>
 
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-              Create Viral Videos Effortlessly
+          {/* Main Heading */}
+          <div className="text-center mb-12">
+            <h1 className="text-5xl md:text-7xl font-bold mb-4 text-white leading-tight">
+              ReCreate Viral Videos<br />
+              <span className="text-4xl md:text-6xl">Effortlessly</span>
             </h1>
-            
-            <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              From Story to Scheduled Video in Minutes
+            <p className="text-2xl md:text-3xl text-gray-400 font-light">
+              and make them your own
             </p>
+          </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                size="lg"
-                className="bg-gradient-to-r from-primary to-purple-600 text-lg h-14 px-8"
-              >
-                Get Started
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="text-lg h-14 px-8"
-              >
-                Learn More
-              </Button>
-            </div>
-
-            <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-              {["5-Step Process", "Multi-Platform", "AI-Powered"].map((item, i) => (
-                <div key={item} className="text-center">
-                  <div className="text-3xl font-bold text-primary mb-1">
-                    {i === 0 ? "5" : i === 1 ? "3+" : "4"}
+          {/* Main Interface Card */}
+          <div className="max-w-5xl mx-auto">
+            <Card className="bg-white border-0 shadow-2xl overflow-hidden">
+              {/* Steps Header */}
+              <div className="bg-gray-50 border-b border-gray-200 px-8 py-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-8">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center font-semibold">
+                        1
+                      </div>
+                      <span className="font-medium text-gray-900">Input Viral Ideas</span>
+                    </div>
+                    <span className="text-gray-400">Personalize</span>
+                    <span className="text-gray-400">Cinematize</span>
+                    <span className="text-gray-400">Captionize</span>
+                    <span className="text-gray-400">Schedule</span>
                   </div>
-                  <div className="text-sm text-muted-foreground">{item}</div>
                 </div>
-              ))}
+              </div>
+
+              {/* Content Area */}
+              <div className="p-8">
+                {/* Input Section */}
+                <div className="mb-6">
+                  <div className="flex items-start gap-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <div className="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center font-semibold shrink-0">
+                      2
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-gray-900 mb-2">Find Viral Content</h3>
+                      <p className="text-sm text-gray-600 mb-3">
+                        Enter an Instagram or TikTok handle to analyze their most viral content
+                      </p>
+                      <div className="flex gap-3">
+                        <Button onClick={() => navigate("/generate")} className="bg-blue-500 hover:bg-blue-600 text-white px-6">
+                          Go to...
+                        </Button>
+                        <span className="text-sm text-gray-500 self-center">or</span>
+                        <div className="text-sm text-gray-500 self-center">
+                          Paste <span className="font-medium text-gray-700">Post URL*</span> or <span className="font-medium text-gray-700">Niche Topic</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Platform Selection */}
+                <div className="flex gap-4 mb-6">
+                  <Button variant="outline" className="flex-1 border-gray-300 text-gray-700">
+                    Instagram
+                  </Button>
+                  <Button className="flex-1 bg-gray-900 hover:bg-gray-800 text-white">
+                    TikTok
+                  </Button>
+                  <Button variant="outline" className="flex-1 border-gray-300 text-gray-700">
+                    NicheTopic
+                  </Button>
+                </div>
+
+                {/* Search Button */}
+                <div className="text-right">
+                  <Button onClick={() => navigate("/generate")} className="bg-blue-500 hover:bg-blue-600 text-white px-8">
+                    Search
+                  </Button>
+                </div>
+              </div>
+            </Card>
+
+            {/* Workflow Preview Images */}
+            <div className="mt-16 space-y-8">
+              {/* Search Results Preview */}
+              <div className="relative">
+                <div className="bg-white rounded-lg p-6 border border-gray-200">
+                  <h3 className="text-gray-900 text-base font-semibold mb-4 flex items-center gap-2">
+                    Search Results
+                    <span className="text-sm text-gray-500 ml-2">(1)</span>
+                    <CheckCircle className="w-5 h-5 text-green-500 ml-1" />
+                    <span className="text-sm text-gray-500 ml-auto">(2)</span>
+                    <CheckCircle className="w-5 h-5 text-green-500 ml-1" />
+                  </h3>
+                  <div className="grid grid-cols-4 gap-3">
+                    {[1, 2, 3, 4].map((item) => (
+                      <div key={item} className="relative group">
+                        <div className="w-full aspect-[9/16] rounded-lg overflow-hidden bg-black shadow-lg">
+                          <img 
+                            src="https://images.unsplash.com/photo-1617019114583-affb34d1b3cd?w=300&h=400&fit=crop" 
+                            alt="Video thumbnail" 
+                            className="w-full h-full object-cover"
+                          />
+                          {/* Overlay */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                          {/* Stats */}
+                          <div className="absolute bottom-2 left-2 flex items-center gap-2 text-white text-xs">
+                            <div className="flex items-center gap-1">
+                              <Video className="w-3 h-3" />
+                              <span>23K</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <span>❤️</span>
+                              <span>16.2K</span>
+                            </div>
+                          </div>
+                          {/* Title */}
+                          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                            <p className="text-white text-lg font-bold drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>
+                              BrandedAI
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Content Analysis Preview */}
+              <div className="bg-transparent rounded-lg p-6">
+                <div className="grid grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="text-white text-sm mb-3 font-medium">Preview</h4>
+                    <div className="bg-black rounded-2xl overflow-hidden shadow-2xl border border-gray-800">
+                      {/* Instagram Reel Style Preview */}
+                      <div className="relative aspect-[5/7]">
+                        <img 
+                          src="https://images.unsplash.com/photo-1617019114583-affb34d1b3cd?w=400&h=700&fit=crop" 
+                          alt="Preview" 
+                          className="w-full h-full object-cover"
+                        />
+                        {/* Overlay Text */}
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <h2 className="text-white text-4xl font-bold text-center px-8 drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>
+                            What if I told<br />you that
+                          </h2>
+                        </div>
+                        {/* Bottom Controls */}
+                        <div className="absolute bottom-4 right-4 flex flex-col gap-4">
+                          <div className="w-10 h-10 rounded-full bg-gray-900/70 backdrop-blur flex items-center justify-center">
+                            <span className="text-white text-xs">❤️</span>
+                          </div>
+                          <div className="w-10 h-10 rounded-full bg-gray-900/70 backdrop-blur flex items-center justify-center">
+                            <span className="text-white text-xs">💬</span>
+                          </div>
+                          <div className="w-10 h-10 rounded-full bg-gray-900/70 backdrop-blur flex items-center justify-center">
+                            <span className="text-white text-xs">↗️</span>
+                          </div>
+                        </div>
+                        {/* Play Icon Indicator */}
+                        <div className="absolute bottom-4 left-4 text-white text-xs bg-gray-900/70 backdrop-blur px-2 py-1 rounded">
+                          <Video className="w-4 h-4 inline mr-1" />
+                          <span>0:15</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="bg-gray-900 rounded-lg p-4 mt-20 space-y-4 border border-gray-800">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500"></div>
+                        <div>
+                          <p className="text-white text-sm font-semibold">@beautybranded · <span className="text-blue-400">Follow</span></p>
+                          <p className="text-gray-400 text-xs">Skincare • Beauty • Vibes</p>
+                        </div>
+                      </div>
+                      <div className="bg-blue-500/10 border border-blue-500/30 rounded px-3 py-1.5 inline-block">
+                        <span className="text-blue-400 text-xs font-medium">@brandedAi AI</span>
+                        <span className="text-white text-xs ml-1">• at 5,104,2359</span>
+                      </div>
+                      <div className="space-y-2 text-sm text-gray-300 leading-relaxed">
+                        <p className="text-white">We've got a skin fix people rave about!</p>
+                        <p>But what if we told you that you could use it to create consistent brand posts?</p>
+                        <p className="text-gray-400 text-xs">It's not just amazing marketing storytelling potential.</p>
+                        <p>It's also not about leveraging the alt-left creating a consistent brand voice. Systematically.</p>
+                        <p className="text-gray-400 text-xs">Across channels. Across campaigns. Across products.</p>
+                        <p>That's how great brands stay clean so let that's how your brand should be without spending millions.</p>
+                        <p className="text-gray-400 text-xs">And finally, gain your products the penetration they deserve.</p>
+                      </div>
+                      <div className="flex gap-2 pt-2">
+                        <span className="text-gray-500 text-xs">❤️ 2,104 likes</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-6 text-center">
+                  <Button className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 text-base font-semibold rounded-lg shadow-lg">
+                    [Reverse Engineer 2 Selected Posts (6 credits)]
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -259,7 +445,7 @@ export default function Landing() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-            {PRICING_PACKAGES.map((pkg, index) => (
+            {PRICING_PACKAGES.map((pkg) => (
               <div key={pkg.name}>
                 <Card className={`p-6 border-border/50 h-full flex flex-col bg-background/50 backdrop-blur ${
                   pkg.popular ? "border-primary/50 bg-primary/5" : ""
@@ -341,6 +527,111 @@ export default function Landing() {
               </div>
             ))}
           </div>
+
+          {/* Add Credits Button */}
+          <div className="text-center mt-12">
+            <Button
+              onClick={() => setShowCredits(!showCredits)}
+              variant="outline"
+              size="lg"
+              className="border-primary/50 text-primary hover:bg-primary/10 px-8 py-6 text-lg"
+            >
+              {showCredits ? "Hide" : "Add"} Credits
+              <ArrowRight className={`ml-2 w-5 h-5 transition-transform ${showCredits ? "rotate-90" : ""}`} />
+            </Button>
+          </div>
+
+          {/* Credits Purchase Section */}
+          {showCredits && (
+            <div className="mt-12 max-w-7xl mx-auto">
+              <div className="text-center mb-8">
+                <p className="text-sm text-muted-foreground">
+                  Note: Credits cannot be exchanged for memberships, nor refunded, transferred or withdrawn. 2 years validity upon redemption.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                {CREDIT_PACKAGES.map((pkg) => (
+                  <Card key={pkg.credits} className="relative bg-gray-900 border-gray-800 p-6 hover:border-green-500/50 transition-colors overflow-hidden">
+                    <div className="relative z-10 text-center">
+                      <div className="flex items-center justify-center gap-2 mb-4">
+                        <Sparkles className="w-6 h-6 text-green-500" />
+                        <span className="text-3xl font-bold text-white">{pkg.credits}</span>
+                      </div>
+                      
+                      <div className="mb-4">
+                        <span className="text-2xl font-bold text-white">${pkg.price}</span>
+                      </div>
+
+                      <Button className="w-full bg-gray-800 hover:bg-gray-700 text-white border border-gray-700">
+                        Purchase
+                      </Button>
+                    </div>
+
+                    {/* Decorative flame background */}
+                    <div className="absolute top-4 right-4 opacity-10 pointer-events-none">
+                      <svg width="100" height="100" viewBox="0 0 100 100" className="text-green-500">
+                        <path
+                          fill="currentColor"
+                          d="M50 10 Q60 30 70 40 Q60 50 65 70 Q50 60 50 80 Q50 60 35 70 Q40 50 30 40 Q40 30 50 10 Z"
+                        />
+                      </svg>
+                    </div>
+                  </Card>
+                ))}
+
+                {/* Custom Credits Card */}
+                <Card className="relative bg-gray-900 border-gray-800 p-6 hover:border-green-500/50 transition-colors overflow-hidden">
+                  <div className="relative z-10 text-center">
+                    <div className="flex items-center justify-center gap-2 mb-4">
+                      <Sparkles className="w-6 h-6 text-green-500" />
+                      <span className="text-lg font-bold text-white">Custom</span>
+                    </div>
+                    
+                    <div className="mb-3">
+                      <Input
+                        type="number"
+                        placeholder="Credits"
+                        value={customCredits}
+                        onChange={(e) => setCustomCredits(e.target.value)}
+                        className="bg-gray-800 border-gray-700 text-white text-center"
+                        min="0"
+                      />
+                    </div>
+
+                    <div className="mb-4">
+                      <span className="text-2xl font-bold text-white">
+                        ${calculateCustomPrice(customCredits)}
+                      </span>
+                    </div>
+
+                    <Button 
+                      className="w-full bg-gray-800 hover:bg-gray-700 text-white border border-gray-700"
+                      disabled={!customCredits || parseInt(customCredits) <= 0}
+                    >
+                      Purchase
+                    </Button>
+                  </div>
+
+                  {/* Decorative flame background */}
+                  <div className="absolute top-4 right-4 opacity-10 pointer-events-none">
+                    <svg width="100" height="100" viewBox="0 0 100 100" className="text-green-500">
+                      <path
+                        fill="currentColor"
+                        d="M50 10 Q60 30 70 40 Q60 50 65 70 Q50 60 50 80 Q50 60 35 70 Q40 50 30 40 Q40 30 50 10 Z"
+                      />
+                    </svg>
+                  </div>
+                </Card>
+              </div>
+
+              <div className="text-center mt-6">
+                <p className="text-xs text-muted-foreground">
+                  Rate: $1 = 10 credits
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
