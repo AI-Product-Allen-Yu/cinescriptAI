@@ -229,15 +229,26 @@ export const VideoGeneration = ({ selectedIdeas, onBack }: VideoGenerationProps)
           <ChevronLeft className="w-4 h-4 mr-2" />
           Back
         </Button>
-        <div className="flex items-center gap-2 text-sm">
-          <span className="text-muted-foreground">Step 3 of 3</span>
-          <div className="flex gap-1">
-            <div className="w-2 h-2 rounded-full bg-primary" />
-            <div className="w-2 h-2 rounded-full bg-primary" />
-            <div className="w-2 h-2 rounded-full bg-primary" />
-          </div>
-        </div>
+        
       </div>
+       <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="glass rounded-xl p-4 border border-border/50"
+      >
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-sm font-medium">Step 3 of 4</span>
+          <span className="text-sm text-muted-foreground">{Math.round((3 / 4) * 100)}%</span>
+        </div>
+        <div className="h-2 bg-background/30 rounded-full overflow-hidden">
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: `${(3 / 4) * 100}%` }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="h-full bg-gradient-to-r from-primary to-secondary"
+          />
+        </div>
+      </motion.div>
 
       {/* Title Section */}
       <div className="glass rounded-2xl p-6 border border-border/50">

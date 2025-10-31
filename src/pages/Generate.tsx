@@ -37,8 +37,9 @@ export default function Generate() {
   };
 
   return (
-    <div className="min-h-screen bg-background pt-20 pb-12 px-4">
-      <div className="container mx-auto max-w-6xl">
+    <div className="min-h-screen bg-background pt-20 pb-12 px-2 sm:px-6 lg:px-10">
+      <div className="container mx-auto max-w-[95vw]">
+
         <AnimatePresence mode="wait">
           {currentStep === "mode_selection" && (
             <motion.div
@@ -49,18 +50,13 @@ export default function Generate() {
               className="space-y-8"
             >
               {/* Header */}
-              <div className="text-center mb-12">
-                <h1 className="text-4xl md:text-5xl font-bold mb-4 gradient-text">
-                  Generate Your Video
-                </h1>
-                <p className="text-xl text-muted-foreground">
-                  Choose how you want to start
-                </p>
-              </div>
+              
 
               {/* Mode Selection */}
               {!generationData?.mode ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-[90vw] mx-auto">
+
                   <div onClick={() => handleModeSelect("direct_prompt")}>
                     <DirectPromptMode onProceed={handleProceedToIdeas} />
                   </div>

@@ -65,17 +65,10 @@ export const DirectPromptMode = ({ onProceed }: DirectPromptModeProps) => {
       animate={{ opacity: 1, y: 0 }}
       className="glass rounded-2xl p-8 border border-border/50"
     >
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-          <Wand2 className="w-5 h-5 text-primary" />
-        </div>
-        <div>
-          <h2 className="text-2xl font-semibold">Direct Prompt</h2>
-          <p className="text-sm text-muted-foreground">Write your video prompt below</p>
-        </div>
-      </div>
 
-      {/* Example Cards */}
+
+      
+        {/* Example Cards */}
       <div className="mb-6">
         <h3 className="text-sm font-medium mb-3 text-muted-foreground">Example Prompts</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -99,32 +92,18 @@ export const DirectPromptMode = ({ onProceed }: DirectPromptModeProps) => {
         </div>
       </div>
 
-      {/* Instructions Card */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-        className="mb-6 p-6 rounded-xl bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/20"
-      >
-        <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-          <Lightbulb className="w-5 h-5 text-primary" />
-          How to Write Great Prompts
-        </h3>
-        <div className="space-y-3 text-sm text-muted-foreground">
-          <p>
-            <strong className="text-foreground">Be Descriptive:</strong> Include details about the scene, lighting, colors, and atmosphere. The more specific you are, the better the results.
-          </p>
-          <p>
-            <strong className="text-foreground">Set the Mood:</strong> Describe the emotional tone or feeling you want to convey (e.g., "serene," "dramatic," "energetic").
-          </p>
-          <p>
-            <strong className="text-foreground">Specify Motion:</strong> Mention camera movements or subject actions (e.g., "slow pan across," "zooming into," "objects floating").
-          </p>
-          <p>
-            <strong className="text-foreground">Visual Style:</strong> Reference artistic styles or cinematography techniques (e.g., "cinematic," "painterly," "time-lapse").
-          </p>
+
+
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+          <Wand2 className="w-5 h-5 text-primary" />
         </div>
-      </motion.div>
+        <div>
+          <h2 className="text-2xl font-semibold">Direct Prompt</h2>
+          <p className="text-sm text-muted-foreground">Write your video prompt below</p>
+        </div>
+      </div>
+
 
       <div className="space-y-4">
         <div>
@@ -153,6 +132,43 @@ export const DirectPromptMode = ({ onProceed }: DirectPromptModeProps) => {
           Generate Video
         </Button>
       </div>
+
+
+
+
+      {/* Instructions Card */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="mb-6 p-6 rounded-xl bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/20"
+      >
+        <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+          <Lightbulb className="w-5 h-5 text-primary" />
+          How to Write Great Prompts
+        </h3>
+        <div className="space-y-3 text-sm text-muted-foreground">
+          <p>
+            <strong className="text-foreground">Be Descriptive:</strong> Include details about the scene, lighting, colors, and atmosphere. The more specific you are, the better the results.
+          </p>
+          <p>
+            <strong className="text-foreground">Set the Mood:</strong> Describe the emotional tone or feeling you want to convey (e.g., "serene," "dramatic," "energetic").
+          </p>
+          <p>
+            <strong className="text-foreground">Specify Motion:</strong> Mention camera movements or subject actions (e.g., "slow pan across," "zooming into," "objects floating").
+          </p>
+          <p>
+            <strong className="text-foreground">Visual Style:</strong> Reference artistic styles or cinematography techniques (e.g., "cinematic," "painterly," "time-lapse").
+          </p>
+        </div>
+      </motion.div>
+
+
     </motion.div>
+
+
+
+
+
   );
 };
