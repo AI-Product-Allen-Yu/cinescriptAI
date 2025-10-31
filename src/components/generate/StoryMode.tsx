@@ -50,11 +50,11 @@ export const StoryMode = ({ onProceed }: StoryModeProps) => {
       return;
     }
 
-    onProceed({
-      mode: "reverse_engineer",
-      ...(inputType === "keyword" ? { keywords } : { accountLink }),
-      tone: selectedTone,
-    });
+    // onProceed({
+    //   mode: "reverse_engineer",
+    //   ...(inputType === "keyword" ? { keywords } : { accountLink }),
+    //   tone: selectedTone,
+    // });
   };
 
   return (
