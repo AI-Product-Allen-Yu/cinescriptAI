@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Search, Sparkles, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,12 +15,26 @@ const SUGGESTED_ACCOUNTS = [
 interface StoryModeProps {
   onProceed: (data: any) => void;
   currentStep?: number;
+  initialInput?: {type: string, value: string} | null;
 }
 
-export const StoryMode = ({ onProceed, currentStep = 1 }: StoryModeProps) => {
-  const [inputType, setInputType] = useState<"keyword" | "account_link">("keyword");
+export const StoryMode = ({ onProceed, currentStep = 1, initialInput }: StoryModeProps) => {
+  const [inputType, setInputType] = useState<"keyword" | "account_link">("account_link");
   const [searchInput, setSearchInput] = useState("");
   const { toast } = useToast();
+
+  // Pre-fill input from URL parameters
+  useEffect(() => {
+    if (initialInput) {
+      if (initialInput.type === "account_link") {
+        setInputType("account_link");
+        setSearchInput(initialInput.value);
+      } else if (initialInput.type === "keyword") {
+        setInputType("keyword");
+        setSearchInput(initialInput.value);
+      }
+    }
+  }, [initialInput]);
 
   const handleSuggestionClick = (suggestion: string) => {
     setSearchInput(suggestion);
@@ -127,7 +141,7 @@ export const StoryMode = ({ onProceed, currentStep = 1 }: StoryModeProps) => {
           <button
             onClick={() => {
               setInputType("keyword");
-              setSearchInput("");
+              if (!initialInput) setSearchInput("");
             }}
             className={`flex-1 py-3 px-6 rounded-lg font-medium transition-all ${
               inputType === "keyword"
@@ -140,7 +154,7 @@ export const StoryMode = ({ onProceed, currentStep = 1 }: StoryModeProps) => {
           <button
             onClick={() => {
               setInputType("account_link");
-              setSearchInput("");
+              if (!initialInput) setSearchInput("");
             }}
             className={`flex-1 py-3 px-6 rounded-lg font-medium transition-all ${
               inputType === "account_link"

@@ -1,4 +1,4 @@
- import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -10,7 +10,10 @@ import Landing from "./pages/Landing";
 import Generate from "./pages/Generate";
 import Dashboard from "./pages/Dashboard";
 import Auth from "./pages/Auth";
+import Pricing from "./pages/pricing"; // Add this import
+
 const queryClient = new QueryClient();
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -27,6 +30,17 @@ const App = () => (
                 <Landing />
                 <AppFooter />
               </>
+            }
+          />
+          {/* Add Pricing route */}
+          <Route
+            path="/pricing"
+            element={
+              <ProtectedRoute>
+                <Navigation />
+                <Pricing />
+                <AppFooter />
+              </ProtectedRoute>
             }
           />
           <Route
@@ -54,4 +68,5 @@ const App = () => (
     </TooltipProvider>
   </QueryClientProvider>
 );
+
 export default App;

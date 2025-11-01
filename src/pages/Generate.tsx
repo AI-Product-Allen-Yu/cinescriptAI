@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSearchParams } from "react-router-dom";
 import { DirectPromptMode } from "@/components/generate/DirectPromptMode";
 import { StoryMode } from "@/components/generate/StoryMode";
 import { IdeasGeneration } from "@/components/generate/IdeasGeneration";
@@ -9,9 +10,23 @@ import type { GenerationData, ContentIdea } from "@/types/generation";
 type Step = "mode_selection" | "ideas_generation" | "video_generation";
 
 export default function Generate() {
+  const [searchParams] = useSearchParams();
   const [currentStep, setCurrentStep] = useState<Step>("mode_selection");
   const [generationData, setGenerationData] = useState<GenerationData | null>(null);
   const [selectedIdeas, setSelectedIdeas] = useState<ContentIdea[]>([]);
+  const [initialInput, setInitialInput] = useState<{type: string, value: string} | null>(null);
+
+  useEffect(() => {
+    // Get URL parameters
+    const type = searchParams.get('type');
+    const input = searchParams.get('input');
+    
+    if (type && input) {
+      setInitialInput({ type, value: decodeURIComponent(input) });
+      // Auto-select story mode if coming from landing page
+      setGenerationData({ mode: "story_mode" });
+    }
+  }, [searchParams]);
 
   const handleModeSelect = (mode: "direct_prompt" | "story_mode") => {
     setGenerationData({ mode });
@@ -61,7 +76,7 @@ export default function Generate() {
                     <DirectPromptMode onProceed={handleProceedToIdeas} />
                   </div>
                   <div onClick={() => handleModeSelect("story_mode")}>
-                    <StoryMode onProceed={handleProceedToIdeas} />
+                    <StoryMode onProceed={handleProceedToIdeas} initialInput={initialInput} />
                   </div>
                 </div>
               ) : (
@@ -69,7 +84,7 @@ export default function Generate() {
                   {generationData.mode === "direct_prompt" ? (
                     <DirectPromptMode onProceed={handleProceedToIdeas} />
                   ) : (
-                    <StoryMode onProceed={handleProceedToIdeas} />
+                    <StoryMode onProceed={handleProceedToIdeas} initialInput={initialInput} />
                   )}
                 </div>
               )}

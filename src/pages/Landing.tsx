@@ -6,6 +6,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
+import Pricing from "./pricing";
+import Contact from "./contact";
 
 const PROCESS_STEPS = [
   {
@@ -126,6 +128,7 @@ const PRICING_PACKAGES = [
   },
 ];
 
+
 export default function Landing() {
   const [contactForm, setContactForm] = useState({
     name: "",
@@ -135,6 +138,8 @@ export default function Landing() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showCredits, setShowCredits] = useState(false);
   const [customCredits, setCustomCredits] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [selectedPlatform, setSelectedPlatform] = useState("tiktok");
   const navigate = useNavigate();
 
   const calculateCustomPrice = (credits) => {
@@ -154,6 +159,32 @@ export default function Landing() {
     setContactForm({ name: "", email: "", message: "" });
     setIsSubmitting(false);
   };
+
+  const handleSearchSubmit = () => {
+    if (searchInput.trim()) {
+      // Check if input is a URL
+      const isUrl = searchInput.includes('instagram.com') || 
+                    searchInput.includes('tiktok.com') || 
+                    searchInput.includes('youtube.com') ||
+                    searchInput.includes('http://') || 
+                    searchInput.includes('https://');
+      
+      if (isUrl) {
+        // Navigate with URL as account link
+        navigate(`/generate?type=account_link&input=${encodeURIComponent(searchInput)}`);
+      } else {
+        // Navigate with keyword
+        navigate(`/generate?type=keyword&input=${encodeURIComponent(searchInput)}`);
+      }
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearchSubmit();
+    }
+  };
+
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -204,7 +235,11 @@ export default function Landing() {
                 </div>
               </div>
 
+
+
+
               {/* Content Area */}
+ {/* Content Area */}
               <div className="p-8">
                 {/* Input Section */}
                 <div className="mb-6">
@@ -215,42 +250,68 @@ export default function Landing() {
                     <div className="flex-1">
                       <h3 className="font-semibold text-gray-900 mb-2">Find Viral Content</h3>
                       <p className="text-sm text-gray-600 mb-3">
-                        Enter an Instagram or TikTok handle to analyze their most viral content
+                        Enter a Post URL, Instagram/TikTok handle, or Niche Topic
                       </p>
-                      <div className="flex gap-3">
-                        <Button onClick={() => navigate("/generate")} className="bg-blue-500 hover:bg-blue-600 text-white px-6">
-                          Go to...
+                      
+                      {/* Platform Selection */}
+                      <div className="flex gap-4 mb-4">
+                        <Button 
+                          variant="outline" 
+                          className={`flex-1 border-gray-300 text-gray-700 hover:bg-gray-100 ${selectedPlatform === 'url' ? 'bg-gray-200 border-gray-400' : ''}`}
+                          onClick={() => setSelectedPlatform('url')}
+                        >
+                          Post URL
                         </Button>
-                        <span className="text-sm text-gray-500 self-center">or</span>
-                        <div className="text-sm text-gray-500 self-center">
-                          Paste <span className="font-medium text-gray-700">Post URL*</span> or <span className="font-medium text-gray-700">Niche Topic</span>
-                        </div>
+                        <Button 
+                          variant="outline" 
+                          className={`flex-1 border-gray-300 text-gray-700 hover:bg-gray-100 ${selectedPlatform === 'instagram' ? 'bg-gray-200 border-gray-400' : ''}`}
+                          onClick={() => setSelectedPlatform('instagram')}
+                        >
+                          Instagram
+                        </Button>
+                        <Button 
+                          className={`flex-1 ${selectedPlatform === 'tiktok' ? 'bg-gray-900 hover:bg-gray-800' : 'bg-gray-700 hover:bg-gray-800'} text-white`}
+                          onClick={() => setSelectedPlatform('tiktok')}
+                        >
+                          TikTok
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          className={`flex-1 border-gray-300 text-gray-700 hover:bg-gray-100 ${selectedPlatform === 'keyword' ? 'bg-gray-200 border-gray-400' : ''}`}
+                          onClick={() => setSelectedPlatform('keyword')}
+                        >
+                          Niche Keyword
+                        </Button>
+                      </div>
+
+                      {/* Single Input Bar with AI Icon */}
+                      <div className="relative">
+                        <Input
+                          value={searchInput}
+                          onChange={(e) => setSearchInput(e.target.value)}
+                          onKeyPress={handleKeyPress}
+                          placeholder="Enter Post URL, @handle, or niche keyword..."
+                          className="w-full bg-white border-gray-300 text-gray-900 placeholder:text-gray-500 pr-12"
+                        />
+                        <button
+                          onClick={handleSearchSubmit}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 flex items-center justify-center transition-all hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                          disabled={!searchInput.trim()}
+                          title="Search with AI"
+                        >
+                          <Sparkles className="w-4 h-4 text-white" />
+                        </button>
                       </div>
                     </div>
                   </div>
                 </div>
-
-                {/* Platform Selection */}
-                <div className="flex gap-4 mb-6">
-                  <Button variant="outline" className="flex-1 border-gray-300 text-gray-700">
-                    Instagram
-                  </Button>
-                  <Button className="flex-1 bg-gray-900 hover:bg-gray-800 text-white">
-                    TikTok
-                  </Button>
-                  <Button variant="outline" className="flex-1 border-gray-300 text-gray-700">
-                    NicheTopic
-                  </Button>
-                </div>
-
-                {/* Search Button */}
-                <div className="text-right">
-                  <Button onClick={() => navigate("/generate")} className="bg-blue-500 hover:bg-blue-600 text-white px-8">
-                    Search
-                  </Button>
-                </div>
               </div>
+
+
+
             </Card>
+
+
 
             {/* Workflow Preview Images */}
             <div className="mt-16 space-y-8">
@@ -424,317 +485,10 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Pricing Section */}
-      <section id="pricing" className="py-24 px-4 bg-muted/20">
-        <div className="container mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Choose Your Plan
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-6">
-              Flexible subscription plans to match your needs
-            </p>
-            <div className="flex justify-center gap-2">
-              <Button variant="default" className="bg-primary/20">
-                Yearly <span className="ml-2 text-green-500">-34%</span>
-              </Button>
-              <Button variant="ghost" className="text-muted-foreground">
-                Monthly <span className="ml-2 text-green-500">-12%</span>
-              </Button>
-            </div>
-          </div>
+    
+    <Pricing />
+    <Contact />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-            {PRICING_PACKAGES.map((pkg) => (
-              <div key={pkg.name}>
-                <Card className={`p-6 border-border/50 h-full flex flex-col bg-background/50 backdrop-blur ${
-                  pkg.popular ? "border-primary/50 bg-primary/5" : ""
-                }`}>
-                  <div className="mb-6">
-                    <h3 className="text-2xl font-bold mb-4">{pkg.name}</h3>
-                    
-                    <div className="mb-4">
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-lg">$</span>
-                        <span className="text-4xl font-bold">{pkg.price}</span>
-                        {pkg.price > 0 && (
-                          <>
-                            <span className="text-muted-foreground ml-2 text-sm">/ Year</span>
-                            {pkg.originalPrice && (
-                              <span className="text-muted-foreground line-through ml-2 text-sm">
-                                ${pkg.originalPrice}
-                              </span>
-                            )}
-                          </>
-                        )}
-                      </div>
-                      {pkg.price === 0 && (
-                        <p className="text-sm text-muted-foreground mt-1">{pkg.subtitle}</p>
-                      )}
-                      {pkg.discount > 0 && (
-                        <p className="text-sm text-muted-foreground mt-1">
-                          Next yearly renewal: ${pkg.price} ({pkg.discount}% off)
-                        </p>
-                      )}
-                    </div>
-
-                    <Button
-                      className={`w-full mb-4 ${
-                        pkg.buttonVariant === "default" ? "bg-blue-500/20 hover:bg-blue-500/30 text-white" : 
-                        pkg.buttonVariant === "secondary" ? "bg-amber-200 hover:bg-amber-300 text-black" : ""
-                      }`}
-                      variant={pkg.buttonVariant}
-                    >
-                      {pkg.buttonText}
-                    </Button>
-
-                    {pkg.discount > 0 && (
-                      <p className="text-xs text-center text-muted-foreground mb-4">Cancel Anytime</p>
-                    )}
-                  </div>
-
-                  {pkg.credits && (
-                    <div className="p-4 rounded-lg mb-4 border border-border/30 bg-background/30">
-                      <div className="flex items-center gap-2 mb-2">
-                        <CheckCircle className="w-5 h-5 text-primary shrink-0" />
-                        <span className="font-semibold">{pkg.credits}</span>
-                        <span className="text-muted-foreground text-sm">Credits per month</span>
-                      </div>
-                      <p className="text-xs text-muted-foreground mb-2">
-                        As low as ${pkg.creditCost} per 100 Credits
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {pkg.images} images / {pkg.videos} standard videos
-                      </p>
-                    </div>
-                  )}
-
-                  <ul className="space-y-3 flex-1">
-                    {pkg.features.map((feature) => (
-                      <li key={feature.text} className="flex items-start gap-2 text-sm">
-                        {feature.checked ? (
-                          <CheckCircle className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
-                        ) : (
-                          <div className="w-4 h-4 rounded-full border-2 border-muted-foreground/30 shrink-0 mt-0.5" />
-                        )}
-                        <span className={feature.highlight ? "font-medium" : "text-muted-foreground"}>
-                          {feature.text}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </Card>
-              </div>
-            ))}
-          </div>
-
-          {/* Add Credits Button */}
-          <div className="text-center mt-12">
-            <Button
-              onClick={() => setShowCredits(!showCredits)}
-              variant="outline"
-              size="lg"
-              className="border-primary/50 text-primary hover:bg-primary/10 px-8 py-6 text-lg"
-            >
-              {showCredits ? "Hide" : "Add"} Credits
-              <ArrowRight className={`ml-2 w-5 h-5 transition-transform ${showCredits ? "rotate-90" : ""}`} />
-            </Button>
-          </div>
-
-          {/* Credits Purchase Section */}
-          {showCredits && (
-            <div className="mt-12 max-w-7xl mx-auto">
-              <div className="text-center mb-8">
-                <p className="text-sm text-muted-foreground">
-                  Note: Credits cannot be exchanged for memberships, nor refunded, transferred or withdrawn. 2 years validity upon redemption.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                {CREDIT_PACKAGES.map((pkg) => (
-                  <Card key={pkg.credits} className="relative bg-gray-900 border-gray-800 p-6 hover:border-green-500/50 transition-colors overflow-hidden">
-                    <div className="relative z-10 text-center">
-                      <div className="flex items-center justify-center gap-2 mb-4">
-                        <Sparkles className="w-6 h-6 text-green-500" />
-                        <span className="text-3xl font-bold text-white">{pkg.credits}</span>
-                      </div>
-                      
-                      <div className="mb-4">
-                        <span className="text-2xl font-bold text-white">${pkg.price}</span>
-                      </div>
-
-                      <Button className="w-full bg-gray-800 hover:bg-gray-700 text-white border border-gray-700">
-                        Purchase
-                      </Button>
-                    </div>
-
-                    {/* Decorative flame background */}
-                    <div className="absolute top-4 right-4 opacity-10 pointer-events-none">
-                      <svg width="100" height="100" viewBox="0 0 100 100" className="text-green-500">
-                        <path
-                          fill="currentColor"
-                          d="M50 10 Q60 30 70 40 Q60 50 65 70 Q50 60 50 80 Q50 60 35 70 Q40 50 30 40 Q40 30 50 10 Z"
-                        />
-                      </svg>
-                    </div>
-                  </Card>
-                ))}
-
-                {/* Custom Credits Card */}
-                <Card className="relative bg-gray-900 border-gray-800 p-6 hover:border-green-500/50 transition-colors overflow-hidden">
-                  <div className="relative z-10 text-center">
-                    <div className="flex items-center justify-center gap-2 mb-4">
-                      <Sparkles className="w-6 h-6 text-green-500" />
-                      <span className="text-lg font-bold text-white">Custom</span>
-                    </div>
-                    
-                    <div className="mb-3">
-                      <Input
-                        type="number"
-                        placeholder="Credits"
-                        value={customCredits}
-                        onChange={(e) => setCustomCredits(e.target.value)}
-                        className="bg-gray-800 border-gray-700 text-white text-center"
-                        min="0"
-                      />
-                    </div>
-
-                    <div className="mb-4">
-                      <span className="text-2xl font-bold text-white">
-                        ${calculateCustomPrice(customCredits)}
-                      </span>
-                    </div>
-
-                    <Button 
-                      className="w-full bg-gray-800 hover:bg-gray-700 text-white border border-gray-700"
-                      disabled={!customCredits || parseInt(customCredits) <= 0}
-                    >
-                      Purchase
-                    </Button>
-                  </div>
-
-                  {/* Decorative flame background */}
-                  <div className="absolute top-4 right-4 opacity-10 pointer-events-none">
-                    <svg width="100" height="100" viewBox="0 0 100 100" className="text-green-500">
-                      <path
-                        fill="currentColor"
-                        d="M50 10 Q60 30 70 40 Q60 50 65 70 Q50 60 50 80 Q50 60 35 70 Q40 50 30 40 Q40 30 50 10 Z"
-                      />
-                    </svg>
-                  </div>
-                </Card>
-              </div>
-
-              <div className="text-center mt-6">
-                <p className="text-xs text-muted-foreground">
-                  Rate: $1 = 10 credits
-                </p>
-              </div>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section id="contact" className="py-24 px-4">
-        <div className="container mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Get In Touch
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Have questions? We'd love to hear from you.
-            </p>
-          </div>
-
-          <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Contact Form */}
-            <div>
-              <Card className="p-8 border-border/50 bg-background/50 backdrop-blur">
-                <div className="space-y-6">
-                  <div>
-                    <Label htmlFor="name">Name</Label>
-                    <Input
-                      id="name"
-                      value={contactForm.name}
-                      onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
-                      placeholder="Your name"
-                      className="mt-2 bg-background/50 border-border/50"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={contactForm.email}
-                      onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
-                      placeholder="your@email.com"
-                      className="mt-2 bg-background/50 border-border/50"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="message">Message</Label>
-                    <Textarea
-                      id="message"
-                      value={contactForm.message}
-                      onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
-                      placeholder="Your message..."
-                      className="mt-2 min-h-[120px] bg-background/50 border-border/50"
-                    />
-                  </div>
-
-                  <Button
-                    onClick={handleContactSubmit}
-                    disabled={isSubmitting}
-                    className="w-full bg-gradient-to-r from-primary to-purple-600"
-                  >
-                    {isSubmitting ? "Sending..." : "Send Message"}
-                  </Button>
-                </div>
-              </Card>
-            </div>
-
-            {/* Contact Info */}
-            <div className="space-y-6">
-              <Card className="p-6 border-border/50 bg-background/50 backdrop-blur">
-                <div className="flex items-start gap-4">
-                  <Mail className="w-6 h-6 text-primary shrink-0 mt-1" />
-                  <div>
-                    <h3 className="font-semibold mb-1">Email</h3>
-                    <p className="text-muted-foreground">support@videoai.com</p>
-                  </div>
-                </div>
-              </Card>
-
-              <Card className="p-6 border-border/50 bg-background/50 backdrop-blur">
-                <div className="flex items-start gap-4">
-                  <Phone className="w-6 h-6 text-primary shrink-0 mt-1" />
-                  <div>
-                    <h3 className="font-semibold mb-1">Phone</h3>
-                    <p className="text-muted-foreground">+1 (555) 123-4567</p>
-                  </div>
-                </div>
-              </Card>
-
-              <Card className="p-6 border-border/50 bg-background/50 backdrop-blur">
-                <div className="flex items-start gap-4">
-                  <MapPin className="w-6 h-6 text-primary shrink-0 mt-1" />
-                  <div>
-                    <h3 className="font-semibold mb-1">Office</h3>
-                    <p className="text-muted-foreground">
-                      123 AI Street<br />
-                      Tech Valley, CA 94025
-                    </p>
-                  </div>
-                </div>
-              </Card>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }
