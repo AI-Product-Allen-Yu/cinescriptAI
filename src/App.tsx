@@ -10,7 +10,7 @@ import Landing from "./pages/Landing";
 import Generate from "./pages/Generate";
 import Dashboard from "./pages/Dashboard";
 import Auth from "./pages/Auth";
-import Pricing from "./pages/pricing"; // Add this import
+import Pricing from "./pages/Pricing"; // Add this import
 
 const queryClient = new QueryClient();
 

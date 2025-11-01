@@ -6,8 +6,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
-import Pricing from "./pricing";
-import Contact from "./contact";
+import Pricing from "./Pricing";
+import Contact from "./Contact";
 
 const PROCESS_STEPS = [
   {

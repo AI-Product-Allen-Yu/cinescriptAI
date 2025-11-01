@@ -90,7 +90,7 @@ const PRICING_PACKAGES = [
   },
 ];
 
-export default function PricingPage() {
+export default function Pricing() {
   const [showCredits, setShowCredits] = useState(false);
   const [customCredits, setCustomCredits] = useState("");
 
