@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { ArrowRight, Sparkles, Video, Calendar, Languages, CheckCircle, Mail, Phone, MapPin, DollarSign } from "lucide-react";
+import { ArrowRight, Sparkles, Video, Calendar, Languages, CheckCircle, Mail, Phone, MapPin, DollarSign, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import Pricing from "./Pricing";
 import Contact from "./Contact";
-
 
 const PROCESS_STEPS = [
   {
@@ -135,6 +135,7 @@ export default function Landing() {
   const [searchInput, setSearchInput] = useState("");
   const [selectedPlatform, setSelectedPlatform] = useState("tiktok");
   const [activeStep, setActiveStep] = useState(1);
+  const [showVideoModal, setShowVideoModal] = useState(false); // NEW
 
   const handleContactSubmit = async () => {
     if (!contactForm.name || !contactForm.email || !contactForm.message) {
@@ -152,11 +153,11 @@ export default function Landing() {
   const handleSearchSubmit = () => {
     if (searchInput.trim()) {
       console.log('Searching for:', searchInput, 'Platform:', selectedPlatform);
-      alert(`Searching ${selectedPlatform}: ${searchInput}`);
+      setShowVideoModal(true); // SHOW VIDEO
     }
   };
 
-  const handleKeyPress = (e) => {
+  const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       handleSearchSubmit();
     }
@@ -200,12 +201,10 @@ export default function Landing() {
               ReCreate Viral Videos<br />
               <span className="text-2xl sm:text-3xl md:text-6xl">Effortlessly</span>
             </h1>
-           
           </div>
 
           {/* Main Interface - Full Width */}
-          <div className="relative mb-2 w-[95vw] sm:w-full mx-auto">
-          {/* <div className="max-w-6xl mx-auto"> */}
+          <div className="max-w-6xl mx-auto">
             <div>
               {/* Steps Header - Horizontally Scrollable */}
               <div className="px-4 py-3 md:py-4 overflow-x-auto mb-0">
@@ -240,9 +239,7 @@ export default function Landing() {
                 {/* Step 1 - Input Section */}
                 {activeStep === 1 && (
                   <div className="mb-6">
-                    {/* <div className="flex items-start gap-2 md:gap-4 p-3 md:p-4 bg-gray-900/50 rounded-lg border border-gray-700"> */}
                     <div className="flex items-start gap-2 md:gap-4 p-3 md:p-6 bg-gray-900/50 rounded-lg border border-gray-700 min-h-[200px] md:min-h-[200px]">
-
                       <div className="flex-1">
                         {/* Platform Selection */}
                         <div className="grid grid-cols-2 md:flex md:flex-row gap-2 md:gap-4 mb-3 md:mb-4">
@@ -373,34 +370,103 @@ export default function Landing() {
                   </div>
                 )}
 
-                {/* Step 2 - Personalize */}
+                {/* [Other steps 2–5 unchanged - keep your original code] */}
                 {activeStep === 2 && (
-                  <div className="text-center py-8 md:py-12">
-                    <Sparkles className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 text-blue-500" />
-                    <h3 className="text-xl md:text-2xl font-bold mb-2">AI Prompt Ideas</h3>
-                    <p className="text-sm md:text-base text-gray-600">Get 5 AI-generated content ideas based on your input</p>
+                  <div className="py-6 md:py-8 px-4">
+                    <div className="bg-gray-900/50 rounded-lg p-6 border border-gray-700">
+                      <div className="flex items-start gap-4 mb-6">
+                        <Sparkles className="w-10 h-10 md:w-12 md:h-12 text-blue-500 shrink-0" />
+                        <div className="flex-1">
+                          <h3 className="text-xl md:text-2xl font-bold mb-2 text-white">AI Prompt Ideas</h3>
+                          <p className="text-sm md:text-base text-gray-400">AI analyzes your input and generates 5 personalized content ideas matching your style and audience</p>
+                        </div>
+                      </div>
+                      <div className="grid gap-3">
+                        {[
+                          "Hook: Transform your morning routine with...",
+                          "Tutorial: Step-by-step guide to achieving...",
+                          "Before/After: Watch this incredible transformation",
+                          "Behind the Scenes: How we create our content",
+                          "Trending: Jumping on the latest viral trend"
+                        ].map((idea, i) => (
+                          <div key={i} className="bg-gray-800/50 p-3 rounded-lg border border-gray-700 text-sm text-gray-300 hover:bg-gray-800 transition-colors">
+                            {idea}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 )}
 
-                {/* Step 3 - Cinematize */}
                 {activeStep === 3 && (
-                  <div className="text-center py-8 md:py-12">
-                    <Video className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 text-blue-500" />
-                    <h3 className="text-xl md:text-2xl font-bold mb-2">Generate Video</h3>
-                    <p className="text-sm md:text-base text-gray-600">Create stunning videos with Sora2 AI technology</p>
+                  <div className="py-6 md:py-8 px-4">
+                    <div className="bg-gray-900/50 rounded-lg p-6 border border-gray-700">
+                      <div className="flex items-start gap-4 mb-6">
+                        <Video className="w-10 h-10 md:w-12 md:h-12 text-blue-500 shrink-0" />
+                        <div className="flex-1">
+                          <h3 className="text-xl md:text-2xl font-bold mb-2 text-white">Generate Video</h3>
+                          <p className="text-sm md:text-base text-gray-400">Powered by Sora2 AI - Create professional videos from your selected ideas</p>
+                        </div>
+                      </div>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div className="aspect-[5/4] bg-gray-800 rounded-lg overflow-hidden border border-gray-700 relative">
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="text-center">
+                              <Video className="w-12 h-12 text-blue-500 mx-auto mb-2" />
+                              <p className="text-sm text-gray-400">Video Preview 1</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="aspect-[5/4] bg-gray-800 rounded-lg overflow-hidden border border-gray-700 relative">
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="text-center">
+                              <Video className="w-12 h-12 text-blue-500 mx-auto mb-2" />
+                              <p className="text-sm text-gray-400">Video Preview 2</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 )}
 
-                {/* Step 4 - Captionize */}
                 {activeStep === 4 && (
-                  <div className="text-center py-8 md:py-12">
-                    <Languages className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 text-blue-500" />
-                    <h3 className="text-xl md:text-2xl font-bold mb-2">Watermark & Captions</h3>
-                    <p className="text-sm md:text-base text-gray-600">Remove watermarks and add multi-language captions</p>
+                  <div className="py-6 md:py-8 px-4">
+                    <div className="bg-gray-900/50 rounded-lg p-6 border border-gray-700">
+                      <div className="flex items-start gap-4 mb-6">
+                        <Languages className="w-10 h-10 md:w-12 md:h-12 text-blue-500 shrink-0" />
+                        <div className="flex-1">
+                          <h3 className="text-xl md:text-2xl font-bold mb-2 text-white">Watermark & Captions</h3>
+                          <p className="text-sm md:text-base text-gray-400">Remove watermarks and add multi-language captions for global reach</p>
+                        </div>
+                      </div>
+                      <div className="space-y-4">
+                        <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                          <div className="flex items-center gap-3 mb-2">
+                            <CheckCircle className="w-5 h-5 text-green-500" />
+                            <span className="text-white font-medium">Watermark Removal</span>
+                          </div>
+                          <p className="text-sm text-gray-400 ml-8">Automatically detect and remove platform watermarks</p>
+                        </div>
+                        <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                          <div className="flex items-center gap-3 mb-2">
+                            <CheckCircle className="w-5 h-5 text-green-500" />
+                            <span className="text-white font-medium">Multi-Language Captions</span>
+                          </div>
+                          <p className="text-sm text-gray-400 ml-8">Add captions in English, Spanish, French, German, and more</p>
+                        </div>
+                        <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                          <div className="flex items-center gap-3 mb-2">
+                            <CheckCircle className="w-5 h-5 text-green-500" />
+                            <span className="text-white font-medium">Custom Styling</span>
+                          </div>
+                          <p className="text-sm text-gray-400 ml-8">Customize caption style, position, and animation</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 )}
 
-                {/* Step 5 - Schedule */}
                 {activeStep === 5 && (
                   <div className="text-center py-8 md:py-12">
                     <Calendar className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 text-blue-500" />
@@ -411,10 +477,9 @@ export default function Landing() {
               </div>
             </div>
 
-            {/* Workflow Preview Images */}
+            {/* [Rest of your hero content - unchanged] */}
             {activeStep === 1 && (
               <div className="mt-8 md:mt-16 space-y-6 md:space-y-8">
-                {/* Search Results Preview */}
                 <div className="relative">
                   <div className="bg-white rounded-lg p-4 md:p-6 border border-gray-200">
                     <h3 className="text-gray-900 text-sm md:text-base font-semibold mb-3 md:mb-4 flex items-center gap-2">
@@ -456,7 +521,6 @@ export default function Landing() {
                   </div>
                 </div>
 
-                {/* Content Analysis Preview */}
                 <div className="bg-transparent rounded-lg p-3 md:p-6">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
                     <div>
@@ -532,6 +596,33 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* VIDEO MODAL - PLACE BEFORE OTHER SECTIONS */}
+      <Dialog open={showVideoModal} onOpenChange={setShowVideoModal}>
+        <DialogContent className="max-w-4xl w-full p-0 bg-black border-0 rounded-xl overflow-hidden">
+          <DialogHeader className="absolute top-4 right-4 z-10">
+            <button
+              onClick={() => setShowVideoModal(false)}
+              className="p-2 bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-sm transition-all"
+            >
+              <X className="w-5 h-5 text-white" />
+            </button>
+          </DialogHeader>
+          <div className="aspect-video w-full">
+            <iframe
+              width="100%"
+              height="100%"
+              src="https://www.youtube.com/embed/j31dmodZ-5c?si=vrhIEcTeR-Yp-Lb6&autoplay=1"
+              title="Demo Video"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+              className="w-full h-full"
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* Process Section */}
       <section id="process" className="py-12 md:py-24 px-4 bg-gray-950">
         <div className="container mx-auto">
@@ -578,10 +669,8 @@ export default function Landing() {
         </div>
       </section>
 
-
-    
-    <Pricing />
-    <Contact />
+      <Pricing />
+      <Contact />
     </div>
   );
 }

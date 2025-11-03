@@ -10,7 +10,8 @@ import Landing from "./pages/Landing";
 import Generate from "./pages/Generate";
 import Dashboard from "./pages/Dashboard";
 import Auth from "./pages/Auth";
-import Pricing from "./pages/Pricing"; // Add this import
+import Pricing from "./pages/Pricing";
+import Tools from "./pages/Tools";
 
 const queryClient = new QueryClient();
 
@@ -32,13 +33,22 @@ const App = () => (
               </>
             }
           />
-          {/* Add Pricing route */}
           <Route
             path="/pricing"
             element={
               <ProtectedRoute>
                 <Navigation />
                 <Pricing />
+                <AppFooter />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tools"
+            element={
+              <ProtectedRoute>
+                <Navigation />
+                <Tools />
                 <AppFooter />
               </ProtectedRoute>
             }

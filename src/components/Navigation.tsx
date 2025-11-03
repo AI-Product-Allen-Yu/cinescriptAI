@@ -70,6 +70,8 @@ const Navigation = () => {
     { name: "Process", onClick: () => scrollToSection('process') },
     { name: "Pricing", onClick: () => scrollToSection('pricing') },
     { name: "Contact", onClick: () => scrollToSection('contact') },
+    { name: "Tools", onClick: () => navigate("/tools") },
+
     { name: "Dashboard", onClick: () => navigate("/dashboard") },
   ];
 
