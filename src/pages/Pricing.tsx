@@ -5,11 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 
 const CREDIT_PACKAGES = [
-  { credits: 330, price: 5 },
-  { credits: 660, price: 10 },
-  { credits: 1320, price: 20 },
-  { credits: 2640, price: 40 },
-  { credits: 5280, price: 80 },
+  { credits: 50, price: 5 },
+  { credits: 100, price: 10 },
+  { credits: 200, price: 20 },
+  { credits: 400, price: 40 },
+  { credits: 800, price: 80 },
 ];
 
 const PRICING_PACKAGES = [

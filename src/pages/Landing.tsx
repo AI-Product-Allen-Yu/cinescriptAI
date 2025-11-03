@@ -200,16 +200,15 @@ export default function Landing() {
               ReCreate Viral Videos<br />
               <span className="text-2xl sm:text-3xl md:text-6xl">Effortlessly</span>
             </h1>
-            <p className="text-lg sm:text-xl md:text-3xl text-gray-400 font-light">
-              and make them your own
-            </p>
+           
           </div>
 
-          {/* Main Interface Card */}
-          <div className="max-w-5xl mx-auto px-2 sm:px-4">
-            <Card className="bg-white border-0 shadow-2xl overflow-hidden">
+          {/* Main Interface - Full Width */}
+          <div className="relative mb-2 w-[95vw] sm:w-full mx-auto">
+          {/* <div className="max-w-6xl mx-auto"> */}
+            <div>
               {/* Steps Header - Horizontally Scrollable */}
-              <div className="bg-gray-50 border-b border-gray-200 px-3 md:px-8 py-3 md:py-4 overflow-x-auto">
+              <div className="px-4 py-3 md:py-4 overflow-x-auto mb-0">
                 <div className="flex gap-3 md:gap-8 min-w-max md:min-w-0">
                   {PROCESS_STEPS.map((step) => (
                     <button
@@ -222,12 +221,12 @@ export default function Landing() {
                       <div className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center font-semibold text-sm md:text-base transition-colors ${
                         activeStep === step.step 
                           ? 'bg-blue-500 text-white' 
-                          : 'bg-gray-300 text-gray-600'
+                          : 'bg-gray-700 text-gray-300'
                       }`}>
                         {step.step}
                       </div>
                       <span className={`font-medium text-xs md:text-base whitespace-nowrap ${
-                        activeStep === step.step ? 'text-gray-900' : 'text-gray-400'
+                        activeStep === step.step ? 'text-white' : 'text-gray-500'
                       }`}>
                         {step.name}
                       </span>
@@ -237,37 +236,39 @@ export default function Landing() {
               </div>
 
               {/* Content Area */}
-              <div className="p-4 md:p-8">
+              <div className="px-4">
                 {/* Step 1 - Input Section */}
                 {activeStep === 1 && (
                   <div className="mb-6">
-                    <div className="flex items-start gap-2 md:gap-4 p-3 md:p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    {/* <div className="flex items-start gap-2 md:gap-4 p-3 md:p-4 bg-gray-900/50 rounded-lg border border-gray-700"> */}
+                    <div className="flex items-start gap-2 md:gap-4 p-3 md:p-6 bg-gray-900/50 rounded-lg border border-gray-700 min-h-[200px] md:min-h-[200px]">
+
                       <div className="flex-1">
                         {/* Platform Selection */}
                         <div className="grid grid-cols-2 md:flex md:flex-row gap-2 md:gap-4 mb-3 md:mb-4">
                           <Button 
                             variant="outline" 
-                            className={`text-xs md:text-sm border-gray-300 text-gray-700 hover:bg-gray-100 ${selectedPlatform === 'url' ? 'bg-gray-200 border-gray-400' : ''}`}
+                            className={`text-xs md:text-sm border-gray-600 text-gray-300 hover:bg-gray-800 ${selectedPlatform === 'url' ? 'bg-gray-700 border-gray-500' : 'bg-gray-900'}`}
                             onClick={() => setSelectedPlatform('url')}
                           >
                             Post URL
                           </Button>
                           <Button 
                             variant="outline" 
-                            className={`text-xs md:text-sm border-gray-300 text-gray-700 hover:bg-gray-100 ${selectedPlatform === 'instagram' ? 'bg-gray-200 border-gray-400' : ''}`}
+                            className={`text-xs md:text-sm border-gray-600 text-gray-300 hover:bg-gray-800 ${selectedPlatform === 'instagram' ? 'bg-gray-700 border-gray-500' : 'bg-gray-900'}`}
                             onClick={() => setSelectedPlatform('instagram')}
                           >
                             Instagram
                           </Button>
                           <Button 
-                            className={`text-xs md:text-sm ${selectedPlatform === 'tiktok' ? 'bg-gray-900 hover:bg-gray-800' : 'bg-gray-700 hover:bg-gray-800'} text-white`}
+                            className={`text-xs md:text-sm ${selectedPlatform === 'tiktok' ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'} text-white`}
                             onClick={() => setSelectedPlatform('tiktok')}
                           >
                             TikTok
                           </Button>
                           <Button 
                             variant="outline" 
-                            className={`text-xs md:text-sm border-gray-300 text-gray-700 hover:bg-gray-100 ${selectedPlatform === 'keyword' ? 'bg-gray-200 border-gray-400' : ''}`}
+                            className={`text-xs md:text-sm border-gray-600 text-gray-300 hover:bg-gray-800 ${selectedPlatform === 'keyword' ? 'bg-gray-700 border-gray-500' : 'bg-gray-900'}`}
                             onClick={() => setSelectedPlatform('keyword')}
                           >
                             Niche Keyword
@@ -281,7 +282,7 @@ export default function Landing() {
                             onChange={(e) => setSearchInput(e.target.value)}
                             onKeyPress={handleKeyPress}
                             placeholder={getPlaceholder()}
-                            className="w-full bg-white border-gray-300 text-gray-900 placeholder:text-gray-500 pr-12 text-sm md:text-base"
+                            className="w-full bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 pr-12 text-sm md:text-base"
                           />
                           <button
                             onClick={handleSearchSubmit}
@@ -294,19 +295,19 @@ export default function Landing() {
                         </div>
                         
                         {/* Example Suggestions */}
-                        <div className="flex flex-wrap gap-2">
-                          <span className="text-xs text-gray-500">Try:</span>
+                        <div className="flex flex-wrap gap-2 mt-[18px]" >
+                          <span className="text-sm text-gray-350">Try:</span>
                           {selectedPlatform === 'instagram' && (
                             <>
                               <button
                                 onClick={() => setSearchInput('@beautyinfluencer')}
-                                className="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 px-2 py-1 rounded transition-colors"
+                                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded transition-colors"
                               >
                                 @beautyinfluencer
                               </button>
                               <button
                                 onClick={() => setSearchInput('@fitnessguru')}
-                                className="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 px-2 py-1 rounded transition-colors"
+                                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded transition-colors"
                               >
                                 @fitnessguru
                               </button>
@@ -316,13 +317,13 @@ export default function Landing() {
                             <>
                               <button
                                 onClick={() => setSearchInput('https://tiktok.com/@user/video/1234567890')}
-                                className="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 px-2 py-1 rounded transition-colors"
+                                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded transition-colors"
                               >
                                 TikTok video URL
                               </button>
                               <button
                                 onClick={() => setSearchInput('https://tiktok.com/@creator/video/9876543210')}
-                                className="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 px-2 py-1 rounded transition-colors"
+                                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded transition-colors"
                               >
                                 Another example
                               </button>
@@ -332,19 +333,19 @@ export default function Landing() {
                             <>
                               <button
                                 onClick={() => setSearchInput('food')}
-                                className="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 px-2 py-1 rounded transition-colors"
+                                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded transition-colors"
                               >
                                 food
                               </button>
                               <button
                                 onClick={() => setSearchInput('makeup')}
-                                className="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 px-2 py-1 rounded transition-colors"
+                                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded transition-colors"
                               >
                                 makeup
                               </button>
                               <button
                                 onClick={() => setSearchInput('fitness')}
-                                className="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 px-2 py-1 rounded transition-colors"
+                                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded transition-colors"
                               >
                                 fitness
                               </button>
@@ -354,13 +355,13 @@ export default function Landing() {
                             <>
                               <button
                                 onClick={() => setSearchInput('https://instagram.com/p/abc123')}
-                                className="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 px-2 py-1 rounded transition-colors"
+                                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded transition-colors"
                               >
                                 Instagram post
                               </button>
                               <button
                                 onClick={() => setSearchInput('https://youtube.com/watch?v=xyz789')}
-                                className="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 px-2 py-1 rounded transition-colors"
+                                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded transition-colors"
                               >
                                 YouTube video
                               </button>
@@ -408,7 +409,7 @@ export default function Landing() {
                   </div>
                 )}
               </div>
-            </Card>
+            </div>
 
             {/* Workflow Preview Images */}
             {activeStep === 1 && (
@@ -521,7 +522,7 @@ export default function Landing() {
                   </div>
                   <div className="mt-4 md:mt-6 text-center">
                     <Button className="bg-blue-500 hover:bg-blue-600 text-white px-4 md:px-8 py-2 md:py-3 text-sm md:text-base font-semibold rounded-lg shadow-lg w-full md:w-auto">
-                      Reverse Engineer 2 Selected Posts (6 credits)
+                      Reverse Engineer Posts (6 credits)
                     </Button>
                   </div>
                 </div>
