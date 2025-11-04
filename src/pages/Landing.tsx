@@ -406,7 +406,8 @@ Timeline Script: 0-3s, 3-6s, 6-10s, 10-15s, …`;
                 {/* [Other steps 2–5 unchanged - keep your original code] */}
                                       {/* ──────────────────────── STEP 2 – PERSONALIZE (FULLY INTERACTIVE) ──────────────────────── */}
                 {activeStep === 2 && (
-                  <div className="px-4 py-6">
+                  <div className="px-0 py-2">
+                    
                     <div className="bg-[#0f0f0f] border border-gray-800 rounded-xl overflow-hidden">
 
                       {/* Header */}
@@ -642,7 +643,8 @@ Timeline Script: 0-3s, 3-6s, 6-10s, 10-15s, …`;
   
         {/* ──────────────────────── STEP 3 – CINEMATIZE (SORA / VEO / WAN) ──────────────────────── */}
                 {activeStep === 3 && (
-                  <div className="px-4 py-6">
+                  <div className="px-0 py-2">
+
                     <div className="bg-[#0f0f0f] border border-gray-800 rounded-xl overflow-hidden">
 
                       {/* Header */}
@@ -735,7 +737,8 @@ Timeline Script: 0-3s, 3-6s, 6-10s, 10-15s, …`;
 
                                 {/* ──────────────────────── STEP 4 – CAPTIONIZE (WATERMARK + CAPTIONS) ──────────────────────── */}
                 {activeStep === 4 && (
-                  <div className="px-4 py-6">
+                <div className="px-0 py-2">
+ 
                     <div className="bg-[#0f0f0f] border border-gray-800 rounded-xl overflow-hidden">
 
                       {/* Header */}
@@ -905,7 +908,8 @@ Timeline Script: 0-3s, 3-6s, 6-10s, 10-15s, …`;
 
                                 {/* ──────────────────────── STEP 5 – SCHEDULE & PUBLISH ──────────────────────── */}
                 {activeStep === 5 && (
-                  <div className="px-4 py-6">
+                  <div className="px-0 py-2">
+
                     <div className="bg-[#0f0f0f] border border-gray-800 rounded-xl overflow-hidden">
 
                       {/* Header */}
