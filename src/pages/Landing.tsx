@@ -136,7 +136,11 @@ export default function Landing() {
   const [selectedPlatform, setSelectedPlatform] = useState("tiktok");
   const [activeStep, setActiveStep] = useState(1);
   const [showVideoModal, setShowVideoModal] = useState(false); // NEW
-
+  const [publishPlatform, setPublishPlatform] = useState<"TikTok" | "Instagram" | "YouTube">("TikTok");
+  const [publishDate, setPublishDate] = useState("");
+  const [publishTime, setPublishTime] = useState("");
+  const [autoOptimize, setAutoOptimize] = useState(true);
+  const [captionText, setCaptionText] = useState("#AI #Viral #BrandedAI");
   const handleContactSubmit = async () => {
     if (!contactForm.name || !contactForm.email || !contactForm.message) {
       alert("Please fill in all fields");
@@ -157,11 +161,35 @@ export default function Landing() {
     }
   };
 
+  const [videoModel, setVideoModel] = useState<"Sora" | "Veo" | "Wan">("Sora");
+  const [copiedPrompt, setCopiedPrompt] = useState("");
+  const [removeWatermark, setRemoveWatermark] = useState(true);
+  const [selectedLanguage, setSelectedLanguage] = useState("English");
+  const [captionStyle, setCaptionStyle] = useState("Bold Center");
+  const [showPreview, setShowPreview] = useState(true);
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       handleSearchSubmit();
     }
   };
+
+
+  const [targetLength, setTargetLength] = useState(30);
+  const [hookType, setHookType] = useState("Bold Claim");
+  const [cta, setCta] = useState("Link in Bio");
+  const [customCta, setCustomCta] = useState("");
+  const [model, setModel] = useState("Groq");
+  const [combinedPrompt, setCombinedPrompt] = useState(`Instructions: Replicate username's coverage of the tech layoffs in last 60 days but do it from the perspective of a laid off tech worker in late 30s.
+Focus on the URLs provided.
+
+===========
+Visual,
+Narration,
+Overlayed Text`);
+
+  const outputPrompt = `30s TikTok Script with Bold Claim intro:
+Narration Script: “blah blah blah”
+Timeline Script: 0-3s, 3-6s, 6-10s, 10-15s, …`;
 
   const getPlaceholder = () => {
     switch(selectedPlatform) {
@@ -370,110 +398,679 @@ export default function Landing() {
                   </div>
                 )}
 
+               
+               
+               
                 {/* [Other steps 2–5 unchanged - keep your original code] */}
+                                      {/* ──────────────────────── STEP 2 – PERSONALIZE (FULLY INTERACTIVE) ──────────────────────── */}
                 {activeStep === 2 && (
-                  <div className="py-6 md:py-8 px-4">
-                    <div className="bg-gray-900/50 rounded-lg p-6 border border-gray-700">
-                      <div className="flex items-start gap-4 mb-6">
-                        <Sparkles className="w-10 h-10 md:w-12 md:h-12 text-blue-500 shrink-0" />
-                        <div className="flex-1">
-                          <h3 className="text-xl md:text-2xl font-bold mb-2 text-white">AI Prompt Ideas</h3>
-                          <p className="text-sm md:text-base text-gray-400">AI analyzes your input and generates 5 personalized content ideas matching your style and audience</p>
+                  <div className="px-4 py-6">
+                    <div className="bg-[#0f0f0f] border border-gray-800 rounded-xl overflow-hidden">
+
+                      {/* Header */}
+                      <div className="flex items-center justify-between p-5 border-b border-gray-800">
+                        <div className="flex items-center gap-3">
+                          <Sparkles className="w-8 h-8 text-blue-500" />
+                          <div>
+                            <h3 className="text-xl font-bold text-white">Personalize</h3>
+                            <p className="text-sm text-gray-500">
+                              Reverse-engineered prompts from URL/username/keyword/news article
+                            </p>
+                          </div>
+                        </div>
+                        <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white text-sm font-medium px-5">
+                          Reverse Engineer
+                        </Button>
+                      </div>
+
+                      {/* Body – Two Columns */}
+                      <div className="grid md:grid-cols-2 gap-6 p-5">
+
+                        {/* LEFT COLUMN */}
+                        <div className="space-y-5">
+
+                          {/* URL Input */}
+                          <div>
+                            <Label className="text-xs text-gray-400">URL / username / keyword</Label>
+                            <div className="relative mt-1">
+                              <Input
+                                placeholder="https://www.instagram.com/username/post/1234"
+                                className="bg-[#1a1a1a] border-gray-700 text-white placeholder:text-gray-500 pr-10"
+                                value={searchInput}
+                                onChange={(e) => setSearchInput(e.target.value)}
+                              />
+                              <Sparkles className="absolute right-3 top-3 w-5 h-5 text-gray-500" />
+                            </div>
+                          </div>
+
+                          {/* Video Preview (Optional Pre-fill) */}
+                          <div className="bg-[#1a1a1a] border border-gray-700 rounded-lg p-4">
+                            <p className="text-xs text-gray-400 mb-3">Optionally Pre-filled from Step 1</p>
+                            <div className="aspect-[5/4] bg-black rounded overflow-hidden relative">
+                              <img 
+                                src="https://images.unsplash.com/photo-1617019114583-affb34d1b3cd?w=300&h=500&fit=crop" 
+                                alt="Preview" 
+                                className="w-full h-full object-cover"
+                              />
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <p className="text-white text-3xl font-bold drop-shadow-lg" style={{textShadow: '2px 2px 6px rgba(0,0,0,0.8)'}}>
+                                  BrandedAI
+                                </p>
+                              </div>
+                              <div className="absolute bottom-2 left-2 flex items-center gap-3 text-white text-xs">
+                                <span>21K</span>
+                                <span>16.2K</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Saved Story */}
+                          <div>
+                            <div className="flex items-center justify-between mb-2">
+                              <Label className="text-xs text-gray-400">My Saved Story</Label>
+                              <button 
+                                onClick={() => alert("Open MyStory Agent questionnaire")}
+                                className="text-xs text-blue-400 hover:underline"
+                              >
+                                Answer More Questions
+                              </button>
+                            </div>
+                            <Textarea
+                              className="bg-[#1a1a1a] border-gray-700 text-gray-300 text-sm min-h-[100px] resize-none"
+                              defaultValue="Former laid off tech worker now helping users build their personal brand with AI. Favorite tennis player: Alcaraz. Favorite podcaster: Candace Owens."
+                            />
+                            <p className="text-xs text-red-400 mt-2">
+                              Allow admin to edit GPT prompt for MyStory Agent to ask the user questions about their target audience, values, perspective
+                            </p>
+                          </div>
+
+                          {/* Persona Tags */}
+                          <div>
+                            <p className="text-xs text-gray-400 mb-2">For this video - ONLY emphasize these personal traits:</p>
+                            <div className="flex flex-wrap gap-2">
+                              {["Laid off tech worker", "Conspiracy theorist"].map((tag, i) => (
+                                <span
+                                  key={i}
+                                  className="px-3 py-1 bg-blue-500/20 border border-blue-500/40 rounded-full text-xs text-blue-300 flex items-center gap-1 hover:bg-blue-500/30 transition"
+                                >
+                                  {tag}
+                                  <button
+                                    onClick={() => alert(`Remove: ${tag}`)}
+                                    className="hover:text-white"
+                                  >
+                                    <X className="w-3 h-3" />
+                                  </button>
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* RIGHT COLUMN – Controls */}
+                        <div className="space-y-5">
+
+                          {/* Target Length */}
+                          <div>
+                            <Label className="text-xs text-gray-400">Target Length of Reel/TikTok/Short</Label>
+                            <div className="flex gap-2 mt-2 flex-wrap">
+                              {[7, 15, 20, 30, 45, 60].map((s) => (
+                                <button
+                                  key={s}
+                                  onClick={() => setTargetLength(s)}
+                                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition ${
+                                    targetLength === s
+                                      ? "bg-blue-500 text-white"
+                                      : "bg-[#1a1a1a] text-gray-400 hover:bg-gray-700"
+                                  }`}
+                                >
+                                  {s}s
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Hook Style */}
+                          <div>
+                            <Label className="text-xs text-gray-400">Hook</Label>
+                            <div className="grid grid-cols-2 gap-2 mt-2">
+                              {["Question", "Bold Claim", "Positive Hook", "Story", "Contrarian", "Negative Hook", "Pain Point Relatability"].map((h) => (
+                                <button
+                                  key={h}
+                                  onClick={() => setHookType(h)}
+                                  className={`px-3 py-2 rounded-lg text-xs font-medium transition ${
+                                    hookType === h
+                                      ? "bg-blue-500 text-white"
+                                      : "bg-[#1a1a1a] text-gray-400 hover:bg-gray-700"
+                                  }`}
+                                >
+                                  {h}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Call-To-Action */}
+                          <div>
+                            <Label className="text-xs text-gray-400">Call-To-Action</Label>
+                            <div className="flex gap-2 mt-2 flex-wrap items-center">
+                              {["Follow for More", "Link in Bio"].map((c) => (
+                                <button
+                                  key={c}
+                                  onClick={() => setCta(c)}
+                                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition ${
+                                    cta === c
+                                      ? "bg-blue-500 text-white"
+                                      : "bg-[#1a1a1a] text-gray-400 hover:bg-gray-700"
+                                  }`}
+                                >
+                                  {c}
+                                </button>
+                              ))}
+                              <Input
+                                placeholder="Custom CTA"
+                                className="flex-1 min-w-[120px] bg-[#1a1a1a] border-gray-700 text-white text-sm"
+                                value={cta === "Custom" ? customCta : ""}
+                                onChange={(e) => {
+                                  setCta("Custom");
+                                  setCustomCta(e.target.value);
+                                }}
+                              />
+                            </div>
+                          </div>
+
+                          {/* Model */}
+                          <div>
+                            <Label className="text-xs text-gray-400">Model</Label>
+                            <select 
+                              className="w-full mt-1 bg-[#1a1a1a] border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                              value={model}
+                              onChange={(e) => setModel(e.target.value)}
+                            >
+                              <option>Groq</option>
+                              <option>Claude</option>
+                              <option>GPT-4</option>
+                            </select>
+                          </div>
+
+                          {/* Instructions (Combined Prompt) */}
+                          <div>
+                            <Label className="text-xs text-gray-400">Instructions (Combined Prompt)</Label>
+                            <Textarea
+                              rows={6}
+                              className="mt-1 bg-[#1a1a1a] border-gray-700 text-gray-300 text-xs placeholder:text-gray-500 resize-none"
+                              value={combinedPrompt}
+                              onChange={(e) => setCombinedPrompt(e.target.value)}
+                            />
+                          </div>
                         </div>
                       </div>
-                      <div className="grid gap-3">
-                        {[
-                          "Hook: Transform your morning routine with...",
-                          "Tutorial: Step-by-step guide to achieving...",
-                          "Before/After: Watch this incredible transformation",
-                          "Behind the Scenes: How we create our content",
-                          "Trending: Jumping on the latest viral trend"
-                        ].map((idea, i) => (
-                          <div key={i} className="bg-gray-800/50 p-3 rounded-lg border border-gray-700 text-sm text-gray-300 hover:bg-gray-800 transition-colors">
-                            {idea}
-                          </div>
-                        ))}
+
+                      {/* Saved Output Prompt */}
+                      <div className="border-t border-gray-800 p-5 bg-[#0a0a0a]">
+                        <div className="flex items-center justify-between mb-3">
+                          <Label className="text-xs text-gray-400">Saved Output Prompt</Label>
+                          <Button 
+  onClick={() => {
+    const prompt = outputPrompt;
+    setCopiedPrompt(prompt);
+    setActiveStep(3); // Redirect to Step 3
+    navigator.clipboard.writeText(prompt);
+    // Optional: toast("Prompt copied & Step 3 opened!")
+  }}
+  className="text-xs bg-blue-500 hover:bg-blue-600 text-white"
+>
+  Copy Script to Step 3 (Sora)
+</Button>
+                        </div>
+                        <div className="bg-[#1a1a1a] border border-gray-700 rounded-lg p-4 font-mono text-xs text-gray-300 space-y-2">
+                          <p className="text-white">30s TikTok Script with <span className="text-blue-400">Bold Claim</span> intro:</p>
+                          <p className="text-gray-500">
+                            Narration Script: “blah blah blah”
+                          </p>
+                          <p className="text-gray-500">
+                            Timeline Script: 0-3s, 3-6s, 6-10s, 10-15s, …
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
                 )}
 
+
+  
+        {/* ──────────────────────── STEP 3 – CINEMATIZE (SORA / VEO / WAN) ──────────────────────── */}
                 {activeStep === 3 && (
-                  <div className="py-6 md:py-8 px-4">
-                    <div className="bg-gray-900/50 rounded-lg p-6 border border-gray-700">
-                      <div className="flex items-start gap-4 mb-6">
-                        <Video className="w-10 h-10 md:w-12 md:h-12 text-blue-500 shrink-0" />
-                        <div className="flex-1">
-                          <h3 className="text-xl md:text-2xl font-bold mb-2 text-white">Generate Video</h3>
-                          <p className="text-sm md:text-base text-gray-400">Powered by Sora2 AI - Create professional videos from your selected ideas</p>
+                  <div className="px-4 py-6">
+                    <div className="bg-[#0f0f0f] border border-gray-800 rounded-xl overflow-hidden">
+
+                      {/* Header */}
+                      <div className="flex items-center justify-between p-5 border-b border-gray-800">
+                        <div className="flex items-center gap-3">
+                          <Video className="w-8 h-8 text-blue-500" />
+                          <div>
+                            <h3 className="text-xl font-bold text-white">Cinematize</h3>
+                            <p className="text-sm text-gray-500">Generate video using AI — powered by your script</p>
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          {["Sora", "Veo", "Wan"].map((model) => (
+                            <button
+                              key={model}
+                              onClick={() => setVideoModel(model as any)}
+                              className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+                                videoModel === model
+                                  ? "bg-blue-500 text-white"
+                                  : "bg-[#1a1a1a] text-gray-400 hover:bg-gray-700"
+                              }`}
+                            >
+                              {model}
+                            </button>
+                          ))}
                         </div>
                       </div>
-                      <div className="grid md:grid-cols-2 gap-4">
-                        <div className="aspect-[5/4] bg-gray-800 rounded-lg overflow-hidden border border-gray-700 relative">
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="text-center">
-                              <Video className="w-12 h-12 text-blue-500 mx-auto mb-2" />
-                              <p className="text-sm text-gray-400">Video Preview 1</p>
+
+                      {/* Body */}
+                      <div className="p-5 space-y-6">
+
+                        {/* Copied Prompt Display */}
+                        {copiedPrompt && (
+                          <div className="bg-[#1a1a1a] border border-gray-700 rounded-lg p-4">
+                            <p className="text-xs text-gray-400 mb-2">Script from Step 2 (Auto-filled)</p>
+                            <div className="bg-[#0a0a0a] p-3 rounded font-mono text-xs text-gray-300 max-h-32 overflow-y-auto">
+                              {copiedPrompt}
                             </div>
+                          </div>
+                        )}
+
+                        {/* Video Previews */}
+                        <div>
+                          <p className="text-xs text-gray-400 mb-3">Video Previews (Generating with {videoModel}...)</p>
+                          <div className="grid md:grid-cols-2 gap-4">
+                            {[1, 2].map((i) => (
+                              <div
+                                key={i}
+                                className="aspect-[5/4] bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg overflow-hidden border border-gray-700 relative group cursor-pointer hover:border-blue-500 transition"
+                              >
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                  <div className="text-center">
+                                    <Video className="w-12 h-12 text-blue-500 mx-auto mb-2" />
+                                    <p className="text-sm text-gray-400">Preview {i}</p>
+                                    <p className="text-xs text-gray-500 mt-1">Click to play</p>
+                                  </div>
+                                </div>
+                                {/* Optional: Add play button overlay */}
+                                <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                                  <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur flex items-center justify-center">
+                                    <div className="w-0 h-0 border-l-8 border-l-white border-y-transparent border-y-8 border-r-0 ml-1" />
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
                           </div>
                         </div>
-                        <div className="aspect-[5/4] bg-gray-800 rounded-lg overflow-hidden border border-gray-700 relative">
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="text-center">
-                              <Video className="w-12 h-12 text-blue-500 mx-auto mb-2" />
-                              <p className="text-sm text-gray-400">Video Preview 2</p>
-                            </div>
-                          </div>
+
+                        {/* Generate Button */}
+                        <div className="flex justify-center">
+                          <Button
+                            onClick={() => alert(`Generating video with ${videoModel}...`)}
+                            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white px-8 py-3 text-lg font-semibold rounded-lg shadow-lg"
+                          >
+                            Generate Video with {videoModel}
+                          </Button>
+                        </div>
+
+                        {/* Credits Info */}
+                        <div className="text-center text-xs text-gray-500">
+                          <p>Cost: ~12 credits per 30s video</p>
                         </div>
                       </div>
                     </div>
                   </div>
                 )}
 
+
+
+
+                                {/* ──────────────────────── STEP 4 – CAPTIONIZE (WATERMARK + CAPTIONS) ──────────────────────── */}
                 {activeStep === 4 && (
-                  <div className="py-6 md:py-8 px-4">
-                    <div className="bg-gray-900/50 rounded-lg p-6 border border-gray-700">
-                      <div className="flex items-start gap-4 mb-6">
-                        <Languages className="w-10 h-10 md:w-12 md:h-12 text-blue-500 shrink-0" />
-                        <div className="flex-1">
-                          <h3 className="text-xl md:text-2xl font-bold mb-2 text-white">Watermark & Captions</h3>
-                          <p className="text-sm md:text-base text-gray-400">Remove watermarks and add multi-language captions for global reach</p>
+                  <div className="px-4 py-6">
+                    <div className="bg-[#0f0f0f] border border-gray-800 rounded-xl overflow-hidden">
+
+                      {/* Header */}
+                      <div className="flex items-center justify-between p-5 border-b border-gray-800">
+                        <div className="flex items-center gap-3">
+                          <Languages className="w-8 h-8 text-blue-500" />
+                          <div>
+                            <h3 className="text-xl font-bold text-white">Captionize</h3>
+                            <p className="text-sm text-gray-500">Remove watermarks & add global captions</p>
+                          </div>
                         </div>
+                        <Button
+                          onClick={() => alert("Video finalized and ready for download!")}
+                          className="bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-500 hover:to-teal-500 text-white text-sm font-medium px-5"
+                        >
+                          Finalize & Download
+                        </Button>
                       </div>
-                      <div className="space-y-4">
-                        <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
-                          <div className="flex items-center gap-3 mb-2">
-                            <CheckCircle className="w-5 h-5 text-green-500" />
-                            <span className="text-white font-medium">Watermark Removal</span>
+
+                      {/* Body */}
+                      <div className="p-5 space-y-6">
+
+                        {/* Video Preview with Live Captions */}
+                        <div>
+                          <div className="flex items-center justify-between mb-3">
+                            <p className="text-xs text-gray-400">Live Preview (with captions)</p>
+                            <button
+                              onClick={() => setShowPreview(!showPreview)}
+                              className="text-xs text-blue-400 hover:underline"
+                            >
+                              {showPreview ? "Hide" : "Show"} Preview
+                            </button>
                           </div>
-                          <p className="text-sm text-gray-400 ml-8">Automatically detect and remove platform watermarks</p>
+                          {showPreview && (
+                            <div className="aspect-[16/9] bg-black rounded-lg overflow-hidden border border-gray-700 relative">
+                              <img
+                                src="https://images.unsplash.com/photo-1617019114583-affb34d1b3cd?w=400&h=700&fit=crop"
+                                alt="Video"
+                                className="w-full h-full object-cover"
+                              />
+                              {/* Watermark (conditionally hidden) */}
+                              {!removeWatermark && (
+                                <div className="absolute top-4 right-4 bg-white/80 text-black text-xs px-2 py-1 rounded font-bold">
+                                  TikTok @user
+                                </div>
+                              )}
+                              {/* Caption Overlay */}
+                              <div className={`
+                                absolute bottom-8 left-1/2 transform -translate-x-1/2
+                                px-4 py-2 rounded-lg text-white font-bold text-lg
+                                ${captionStyle.includes("Bold") ? "bg-black/60 backdrop-blur" : "bg-transparent"}
+                                ${captionStyle.includes("Center") ? "text-center w-full max-w-xs" : "text-left"}
+                                ${captionStyle.includes("Top") ? "top-8 bottom-auto" : ""}
+                                ${captionStyle.includes("Animated") ? "animate-pulse" : ""}
+                              `}>
+                                "This changed everything for me..."
+                              </div>
+                            </div>
+                          )}
                         </div>
-                        <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
-                          <div className="flex items-center gap-3 mb-2">
-                            <CheckCircle className="w-5 h-5 text-green-500" />
-                            <span className="text-white font-medium">Multi-Language Captions</span>
+
+                        {/* Controls Grid */}
+                        <div className="grid md:grid-cols-3 gap-5">
+
+                          {/* Watermark Removal */}
+                          <div className="bg-[#1a1a1a] border border-gray-700 rounded-lg p-4">
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center gap-2">
+                                <CheckCircle className={`w-5 h-5 ${removeWatermark ? "text-green-500" : "text-gray-600"}`} />
+                                <span className="text-white font-medium text-sm">Watermark Removal</span>
+                              </div>
+                              <button
+                                onClick={() => setRemoveWatermark(!removeWatermark)}
+                                className={`w-10 h-5 rounded-full relative transition ${removeWatermark ? "bg-blue-500" : "bg-gray-600"}`}
+                              >
+                                <span className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition ${removeWatermark ? "translate-x-5" : ""}`} />
+                              </button>
+                            </div>
+                            <p className="text-xs text-gray-400">Auto-detect and remove platform watermarks</p>
                           </div>
-                          <p className="text-sm text-gray-400 ml-8">Add captions in English, Spanish, French, German, and more</p>
+
+                          {/* Language Selector */}
+                          <div className="bg-[#1a1a1a] border border-gray-700 rounded-lg p-4">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Languages className="w-5 h-5 text-blue-400" />
+                              <span className="text-white font-medium text-sm">Caption Language</span>
+                            </div>
+                            <select
+                              value={selectedLanguage}
+                              onChange={(e) => setSelectedLanguage(e.target.value)}
+                              className="w-full bg-[#0a0a0a] border border-gray-600 rounded px-3 py-1.5 text-xs text-white focus:ring-1 focus:ring-blue-500"
+                            >
+                              <option>English</option>
+                              <option>Spanish</option>
+                              <option>French</option>
+                              <option>German</option>
+                              <option>Arabic</option>
+                              <option>Hindi</option>
+                              <option>Portuguese</option>
+                            </select>
+                            <p className="text-xs text-gray-400 mt-2">Auto-translate & sync captions</p>
+                          </div>
+
+                          {/* Caption Style */}
+                          <div className="bg-[#1a1a1a] border border-gray-700 rounded-lg p-4">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Sparkles className="w-5 h-5 text-purple-400" />
+                              <span className="text-white font-medium text-sm">Caption Style</span>
+                            </div>
+                            <div className="grid grid-cols-2 gap-2">
+                              {["Bold Center", "Minimal", "Top Banner", "Animated"].map((style) => (
+                                <button
+                                  key={style}
+                                  onClick={() => setCaptionStyle(style)}
+                                  className={`text-xs py-1.5 rounded transition ${
+                                    captionStyle === style
+                                      ? "bg-purple-500 text-white"
+                                      : "bg-[#0a0a0a] text-gray-400 hover:bg-gray-700"
+                                  }`}
+                                >
+                                  {style}
+                                </button>
+                              ))}
+                            </div>
+                            <p className="text-xs text-gray-400 mt-2">Customize position, font & animation</p>
+                          </div>
                         </div>
-                        <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
-                          <div className="flex items-center gap-3 mb-2">
-                            <CheckCircle className="w-5 h-5 text-green-500" />
-                            <span className="text-white font-medium">Custom Styling</span>
+
+                        {/* Caption Editor */}
+                        <div>
+                          <p className="text-xs text-gray-400 mb-2">Edit Caption Text (per scene)</p>
+                          <Textarea
+                            rows={3}
+                            placeholder="Enter caption for 0-3s..."
+                            className="bg-[#1a1a1a] border-gray-700 text-white text-sm placeholder:text-gray-500"
+                            defaultValue="This changed everything for me..."
+                          />
+                          <div className="flex gap-2 mt-2">
+                            <Button size="sm" variant="outline" className="text-xs">
+                              + Add Scene
+                            </Button>
+                            <Button size="sm" className="text-xs bg-blue-500 hover:bg-blue-600">
+                              Auto-Generate Captions
+                            </Button>
                           </div>
-                          <p className="text-sm text-gray-400 ml-8">Customize caption style, position, and animation</p>
+                        </div>
+
+                        {/* Export Options */}
+                        <div className="flex justify-between items-center pt-4 border-t border-gray-800">
+                          <div className="text-xs text-gray-500">
+                            <p>Format: MP4 • 1080p • 30fps</p>
+                            <p>Estimated size: ~45MB</p>
+                          </div>
+                          <div className="flex gap-2">
+                            <Button variant="outline" size="sm" className="text-xs">
+                              Preview in Editor
+                            </Button>
+                            <Button size="sm" className="text-xs bg-green-600 hover:bg-green-500">
+                              Download Now
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 )}
 
+                                {/* ──────────────────────── STEP 5 – SCHEDULE & PUBLISH ──────────────────────── */}
                 {activeStep === 5 && (
-                  <div className="text-center py-8 md:py-12">
-                    <Calendar className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 text-blue-500" />
-                    <h3 className="text-xl md:text-2xl font-bold mb-2">Schedule & Publish</h3>
-                    <p className="text-sm md:text-base text-gray-600">Auto-schedule to TikTok, Instagram, YouTube</p>
+                  <div className="px-4 py-6">
+                    <div className="bg-[#0f0f0f] border border-gray-800 rounded-xl overflow-hidden">
+
+                      {/* Header */}
+                      <div className="flex items-center justify-between p-5 border-b border-gray-800">
+                        <div className="flex items-center gap-3">
+                          <Calendar className="w-8 h-8 text-blue-500" />
+                          <div>
+                            <h3 className="text-xl font-bold text-white">Schedule & Publish</h3>
+                            <p className="text-sm text-gray-500">Auto-post to TikTok, Instagram, YouTube</p>
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            onClick={() => alert("Video published instantly!")}
+                            className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white text-sm font-medium px-5"
+                          >
+                            Publish Now
+                          </Button>
+                          <Button
+                            onClick={() => alert(`Scheduled for ${publishDate} ${publishTime}`)}
+                            variant="outline"
+                            className="border-gray-600 text-gray-300 hover:bg-gray-800 text-sm font-medium px-5"
+                          >
+                            Schedule
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* Body */}
+                      <div className="p-5 space-y-6">
+
+                        {/* Platform Selector */}
+                        <div>
+                          <p className="text-xs text-gray-400 mb-3">Select Platform</p>
+                          <div className="grid grid-cols-3 gap-3">
+                            {[
+                              { name: "TikTok", icon: "video", color: "from-pink-500 to-red-500" },
+                              { name: "Instagram", icon: "camera", color: "from-purple-500 to-pink-500" },
+                              { name: "YouTube", icon: "youtube", color: "from-red-500 to-red-600" },
+                            ].map((plat) => (
+                              <button
+                                key={plat.name}
+                                onClick={() => setPublishPlatform(plat.name as any)}
+                                className={`p-4 rounded-lg border transition ${
+                                  publishPlatform === plat.name
+                                    ? "bg-gradient-to-br ${plat.color} text-white border-transparent"
+                                    : "bg-[#1a1a1a] border-gray-700 text-gray-400 hover:bg-gray-800"
+                                }`}
+                              >
+                                <div className="flex flex-col items-center gap-1">
+                                  <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+                                    {plat.icon === "video" && <div className="w-0 h-0 border-l-4 border-l-white border-y-transparent border-y-4 border-r-0 ml-1" />}
+                                    {plat.icon === "camera" && <div className="w-5 h-5 bg-white rounded-sm" />}
+                                    {plat.icon === "youtube" && <div className="w-5 h-3 bg-white rounded-sm" />}
+                                  </div>
+                                  <span className="text-xs font-medium">{plat.name}</span>
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Schedule Picker */}
+                        <div className="grid md:grid-cols-2 gap-4">
+                          <div>
+                            <Label className="text-xs text-gray-400">Date</Label>
+                            <Input
+                              type="date"
+                              className="mt-1 bg-[#1a1a1a] border-gray-700 text-white text-sm"
+                              value={publishDate}
+                              onChange={(e) => setPublishDate(e.target.value)}
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-xs text-gray-400">Time (Your Timezone)</Label>
+                            <Input
+                              type="time"
+                              className="mt-1 bg-[#1a1a1a] border-gray-700 text-white text-sm"
+                              value={publishTime}
+                              onChange={(e) => setPublishTime(e.target.value)}
+                            />
+                          </div>
+                        </div>
+
+                        {/* Auto-Optimize Toggle */}
+                        <div className="flex items-center justify-between bg-[#1a1a1a] border border-gray-700 rounded-lg p-4">
+                          <div className="flex items-center gap-3">
+                            <Sparkles className="w-5 h-5 text-yellow-400" />
+                            <div>
+                              <p className="text-white font-medium text-sm">Auto-Optimize for {publishPlatform}</p>
+                              <p className="text-xs text-gray-400">Best time, hashtags, thumbnail</p>
+                            </div>
+                          </div>
+                          <button
+                            onClick={() => setAutoOptimize(!autoOptimize)}
+                            className={`w-10 h-5 rounded-full relative transition ${autoOptimize ? "bg-blue-500" : "bg-gray-600"}`}
+                          >
+                            <span className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition ${autoOptimize ? "translate-x-5" : ""}`} />
+                          </button>
+                        </div>
+
+                        {/* Caption Editor */}
+                        <div>
+                          <div className="flex items-center justify-between mb-2">
+                            <Label className="text-xs text-gray-400">Caption</Label>
+                            <button className="text-xs text-blue-400 hover:underline">
+                              AI Suggest
+                            </button>
+                          </div>
+                          <Textarea
+                            rows={3}
+                            placeholder="Add your caption..."
+                            className="bg-[#1a1a1a] border-gray-700 text-white text-sm placeholder:text-gray-500"
+                            value={captionText}
+                            onChange={(e) => setCaptionText(e.target.value)}
+                          />
+                          <div className="flex flex-wrap gap-1 mt-2">
+                            {["#AI", "#Viral", "#BrandedAI", "#Tech", "#Motivation"].map((tag) => (
+                              <span
+                                key={tag}
+                                className="text-xs px-2 py-1 bg-blue-500/20 border border-blue-500/40 rounded-full text-blue-300"
+                              >
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Post Preview */}
+                        <div>
+                          <p className="text-xs text-gray-400 mb-3">Post Preview</p>
+                          <div className="bg-[#1a1a1a] border border-gray-700 rounded-lg p-4">
+                            <div className="aspect-[16/9] bg-black rounded overflow-hidden mb-3 relative">
+                              <img
+                                src="https://images.unsplash.com/photo-1617019114583-affb34d1b3cd?w=400&h=700&fit=crop"
+                                alt="Preview"
+                                className="w-full h-full object-cover"
+                              />
+                              <div className="absolute bottom-4 left-4 text-white">
+                                <p className="font-bold text-lg">This changed everything...</p>
+                              </div>
+                            </div>
+                            <div className="flex items-start gap-3">
+                              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 shrink-0" />
+                              <div className="flex-1">
+                                <p className="text-white text-sm font-medium">@yourbrand</p>
+                                <p className="text-gray-400 text-xs line-clamp-2">{captionText}</p>
+                                <p className="text-gray-500 text-xs mt-1">Just now</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Final Actions */}
+                        <div className="flex justify-center gap-3 pt-4 border-t border-gray-800">
+                          <Button variant="outline" size="sm" className="text-xs">
+                            Save as Draft
+                          </Button>
+                          <Button size="sm" className="text-xs bg-green-600 hover:bg-green-500">
+                            Publish to {publishPlatform}
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 )}
+
               </div>
             </div>
 
