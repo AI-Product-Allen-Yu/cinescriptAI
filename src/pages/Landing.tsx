@@ -263,140 +263,142 @@ Timeline Script: 0-3s, 3-6s, 6-10s, 10-15s, …`;
               </div>
 
               {/* Content Area */}
-              <div className="px-4">
+              {/* <div className="px-4"> */}
+          <div className="px-0 md:px-4">
                 {/* Step 1 - Input Section */}
                 {activeStep === 1 && (
-                  <div className="mb-6">
-                    <div className="flex items-start gap-2 md:gap-4 p-3 md:p-6 bg-gray-900/50 rounded-lg border border-gray-700 min-h-[200px] md:min-h-[200px]">
-                      <div className="flex-1">
-                        {/* Platform Selection */}
-                        <div className="grid grid-cols-2 md:flex md:flex-row gap-2 md:gap-4 mb-3 md:mb-4">
-                          <Button 
-                            variant="outline" 
-                            className={`text-xs md:text-sm border-gray-600 text-gray-300 hover:bg-gray-800 ${selectedPlatform === 'url' ? 'bg-gray-700 border-gray-500' : 'bg-gray-900'}`}
-                            onClick={() => setSelectedPlatform('url')}
-                          >
-                            Post URL
-                          </Button>
-                          <Button 
-                            variant="outline" 
-                            className={`text-xs md:text-sm border-gray-600 text-gray-300 hover:bg-gray-800 ${selectedPlatform === 'instagram' ? 'bg-gray-700 border-gray-500' : 'bg-gray-900'}`}
-                            onClick={() => setSelectedPlatform('instagram')}
-                          >
-                            Instagram
-                          </Button>
-                          <Button 
-                            className={`text-xs md:text-sm ${selectedPlatform === 'tiktok' ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'} text-white`}
-                            onClick={() => setSelectedPlatform('tiktok')}
-                          >
-                            TikTok
-                          </Button>
-                          <Button 
-                            variant="outline" 
-                            className={`text-xs md:text-sm border-gray-600 text-gray-300 hover:bg-gray-800 ${selectedPlatform === 'keyword' ? 'bg-gray-700 border-gray-500' : 'bg-gray-900'}`}
-                            onClick={() => setSelectedPlatform('keyword')}
-                          >
-                            Niche Keyword
-                          </Button>
-                        </div>
+  <div className="mb-6">
+    {/* Full-width card with extra mobile breathing room */}
+    <div className="px-1 md:px-0 flex flex-col p-3 md:p-6 bg-gray-900/50 rounded-lg border border-gray-700 min-h-[200px] w-full">
+      <div className="flex-1 w-full">
+        {/* Platform Selection */}
+        <div className="grid grid-cols-2 md:flex md:flex-row gap-2 md:gap-4 mb-3 md:mb-4">
+          <Button 
+            variant="outline" 
+            className={`text-xs md:text-sm border-gray-600 text-gray-300 hover:bg-gray-800 ${selectedPlatform === 'url' ? 'bg-gray-700 border-gray-500' : 'bg-gray-900'}`}
+            onClick={() => setSelectedPlatform('url')}
+          >
+            Post URL
+          </Button>
+          <Button 
+            variant="outline" 
+            className={`text-xs md:text-sm border-gray-600 text-gray-300 hover:bg-gray-800 ${selectedPlatform === 'instagram' ? 'bg-gray-700 border-gray-500' : 'bg-gray-900'}`}
+            onClick={() => setSelectedPlatform('instagram')}
+          >
+            Instagram
+          </Button>
+          <Button 
+            className={`text-xs md:text-sm ${selectedPlatform === 'tiktok' ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-700 hover:bg-gray-600'} text-white`}
+            onClick={() => setSelectedPlatform('tiktok')}
+          >
+            TikTok
+          </Button>
+          <Button 
+            variant="outline" 
+            className={`text-xs md:text-sm border-gray-600 text-gray-300 hover:bg-gray-800 ${selectedPlatform === 'keyword' ? 'bg-gray-700 border-gray-500' : 'bg-gray-900'}`}
+            onClick={() => setSelectedPlatform('keyword')}
+          >
+            Niche Keyword
+          </Button>
+        </div>
 
-                        {/* Single Input Bar with AI Icon */}
-                        <div className="relative mb-2">
-                          <Input
-                            value={searchInput}
-                            onChange={(e) => setSearchInput(e.target.value)}
-                            onKeyPress={handleKeyPress}
-                            placeholder={getPlaceholder()}
-                            className="w-full bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 pr-12 text-sm md:text-base"
-                          />
-                          <button
-                            onClick={handleSearchSubmit}
-                            className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 md:w-8 md:h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 flex items-center justify-center transition-all hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                            disabled={!searchInput.trim()}
-                            title="Search with AI"
-                          >
-                            <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-white" />
-                          </button>
-                        </div>
-                        
-                        {/* Example Suggestions */}
-                        <div className="flex flex-wrap gap-2 mt-[18px]" >
-                          <span className="text-sm text-gray-350">Try:</span>
-                          {selectedPlatform === 'instagram' && (
-                            <>
-                              <button
-                                onClick={() => setSearchInput('@beautyinfluencer')}
-                                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded transition-colors"
-                              >
-                                @beautyinfluencer
-                              </button>
-                              <button
-                                onClick={() => setSearchInput('@fitnessguru')}
-                                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded transition-colors"
-                              >
-                                @fitnessguru
-                              </button>
-                            </>
-                          )}
-                          {selectedPlatform === 'tiktok' && (
-                            <>
-                              <button
-                                onClick={() => setSearchInput('https://tiktok.com/@user/video/1234567890')}
-                                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded transition-colors"
-                              >
-                                TikTok video URL
-                              </button>
-                              <button
-                                onClick={() => setSearchInput('https://tiktok.com/@creator/video/9876543210')}
-                                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded transition-colors"
-                              >
-                                Another example
-                              </button>
-                            </>
-                          )}
-                          {selectedPlatform === 'keyword' && (
-                            <>
-                              <button
-                                onClick={() => setSearchInput('food')}
-                                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded transition-colors"
-                              >
-                                food
-                              </button>
-                              <button
-                                onClick={() => setSearchInput('makeup')}
-                                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded transition-colors"
-                              >
-                                makeup
-                              </button>
-                              <button
-                                onClick={() => setSearchInput('fitness')}
-                                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded transition-colors"
-                              >
-                                fitness
-                              </button>
-                            </>
-                          )}
-                          {selectedPlatform === 'url' && (
-                            <>
-                              <button
-                                onClick={() => setSearchInput('https://instagram.com/p/abc123')}
-                                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded transition-colors"
-                              >
-                                Instagram post
-                              </button>
-                              <button
-                                onClick={() => setSearchInput('https://youtube.com/watch?v=xyz789')}
-                                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded transition-colors"
-                              >
-                                YouTube video
-                              </button>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
+        {/* Single Input Bar with AI Icon */}
+        <div className="relative mb-2">
+          <Input
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            onKeyPress={handleKeyPress}
+            placeholder={getPlaceholder()}
+            className="w-full bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 pr-12 text-sm md:text-base"
+          />
+          <button
+            onClick={handleSearchSubmit}
+            className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 md:w-8 md:h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 flex items-center justify-center transition-all hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+            disabled={!searchInput.trim()}
+            title="Search with AI"
+          >
+            <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-white" />
+          </button>
+        </div>
+        
+        {/* Example Suggestions */}
+        <div className="flex flex-wrap gap-2 mt-[18px]">
+          <span className="text-sm text-gray-400">Try:</span>
+          {selectedPlatform === 'instagram' && (
+            <>
+              <button
+                onClick={() => setSearchInput('@beautyinfluencer')}
+                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded transition-colors"
+              >
+                @beautyinfluencer
+              </button>
+              <button
+                onClick={() => setSearchInput('@fitnessguru')}
+                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded transition-colors"
+              >
+                @fitnessguru
+              </button>
+            </>
+          )}
+          {selectedPlatform === 'tiktok' && (
+            <>
+              <button
+                onClick={() => setSearchInput('https://tiktok.com/@user/video/1234567890')}
+                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded transition-colors"
+              >
+                TikTok video URL
+              </button>
+              <button
+                onClick={() => setSearchInput('https://tiktok.com/@creator/video/9876543210')}
+                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded transition-colors"
+              >
+                Another example
+              </button>
+            </>
+          )}
+          {selectedPlatform === 'keyword' && (
+            <>
+              <button
+                onClick={() => setSearchInput('food')}
+                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded transition-colors"
+              >
+                food
+              </button>
+              <button
+                onClick={() => setSearchInput('makeup')}
+                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded transition-colors"
+              >
+                makeup
+              </button>
+              <button
+                onClick={() => setSearchInput('fitness')}
+                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded transition-colors"
+              >
+                fitness
+              </button>
+            </>
+          )}
+          {selectedPlatform === 'url' && (
+            <>
+              <button
+                onClick={() => setSearchInput('https://instagram.com/p/abc123')}
+                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded transition-colors"
+              >
+                Instagram post
+              </button>
+              <button
+                onClick={() => setSearchInput('https://youtube.com/watch?v=xyz789')}
+                className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-200 px-2 py-1 rounded transition-colors"
+              >
+                YouTube video
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+)}
 
                
                
