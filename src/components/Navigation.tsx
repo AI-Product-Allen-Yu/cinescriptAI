@@ -86,9 +86,13 @@ const Navigation = () => {
       <div className="container mx-auto px-4">
         <nav className="flex items-center justify-between h-16">
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate("/")}>
-            <Command className="w-5 h-5 text-primary" />
-            <span className="font-bold text-base">VideoAI</span>
+            <img 
+              src="/logo.png" 
+              alt="VideoAI Logo" 
+              className="h-8 w-auto object-contain"
+            />
           </div>
+          
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6">
