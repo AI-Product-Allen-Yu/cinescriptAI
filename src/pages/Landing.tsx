@@ -171,6 +171,11 @@ export default function Landing() {
     // 🔹 NEW: base prompt coming from Step 1 (reverse API)
     const [basePrompt, setBasePrompt] = useState("");
 
+
+    const [showReverseEngineer, setShowReverseEngineer] = useState(false);
+    const [reversePrompt, setReversePrompt] = useState('');
+
+
     // 🔹 NEW: personalization + refine state for Step 2 → Step 3
     const [hasPersonalization, setHasPersonalization] = useState(false);
     const [isStep3Ready, setIsStep3Ready] = useState(false);
@@ -793,6 +798,7 @@ export default function Landing() {
                                 )}
 
 
+
                                 {/* [Other steps 2–5 unchanged - keep your original code] */}
                                 {/* ──────────────────────── STEP 2 – PERSONALIZE (FULLY INTERACTIVE) ──────────────────────── */}
                                 {activeStep === 2 && (
@@ -1080,6 +1086,9 @@ export default function Landing() {
                                         </div>
                                     </div>
                                 )}
+
+
+
                                 {/* ──────────────────────── STEP 3 – CINEMATIZE (SORA / VEO / WAN) ──────────────────────── */}
                                 {activeStep === 3 && (
                                     <div className="px-0 py-2">
@@ -1190,6 +1199,8 @@ export default function Landing() {
                                         </div>
                                     </div>
                                 )}
+
+
                                 {/* ──────────────────────── STEP 4 – CAPTIONIZE (WATERMARK + CAPTIONS) ──────────────────────── */}
                                 {activeStep === 4 && (
                                     <div className="px-0 py-2">
@@ -1364,6 +1375,7 @@ export default function Landing() {
                                         </div>
                                     </div>
                                 )}
+
                                 {/* ──────────────────────── STEP 5 – SCHEDULE & PUBLISH ──────────────────────── */}
                                 {activeStep === 5 && (
                                     <div className="px-0 py-2">
@@ -1513,6 +1525,7 @@ export default function Landing() {
                                                         ))}
                                                     </div>
                                                 </div>
+
                                                 {/* Post Preview */}
                                                 <div>
                                                     <p className="text-xs text-gray-400 mb-3">Post Preview</p>
@@ -1561,133 +1574,170 @@ export default function Landing() {
                         
                         {/* [Rest of your hero content - unchanged] */}
                         {activeStep === 1 && (
-                            <div className="mt-2 md:mt-16 space-y-6 md:space-y-8">
-
-                                <div className="bg-transparent rounded-lg p-3 md:p-6">
-                                    {isLinkEntered && (
-                                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-                                            <div>
-                                                <h4 className="text-white text-xs md:text-sm mb-2 md:mb-3 font-medium">Preview</h4>
-                                                <div
-                                                    className="bg-black rounded-2xl overflow-hidden shadow-2xl border border-gray-800 max-w-sm mx-auto lg:max-w-none">
-                                                    <div className="relative aspect-[9/16]">
-                                                        {embedSrc ? (
-                                                            <iframe
-                                                                src={embedSrc}
-                                                                width="100%"
-                                                                height="100%"
-                                                                frameBorder="0"
-                                                                allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-                                                                allowFullScreen
-                                                                title="Video preview"
-                                                            ></iframe>
-                                                        ) : (
-                                                            <img
-                                                                src="https://images.unsplash.com/photo-1617019114583-affb34d1b3cd?w=400&h=700&fit=crop"
-                                                                alt="Preview"
-                                                                className="w-full h-full object-cover"
-                                                            />
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div
-                                                className="bg-gray-900 rounded-lg p-3 md:p-4 mt-0 lg:mt-20 space-y-3 md:space-y-4 border border-gray-800">
-                                                {/* Comments */}
-                                                <div className="space-y-2 border-t border-gray-800 pt-2">
-                                                    <h5 className="text-white text-xs font-medium">Comments</h5>
-                                                    <div className="flex items-start gap-2">
-                                                        <div className="w-6 h-6 rounded-full bg-gray-600"></div>
-                                                        <div>
-                                                            <p className="text-gray-300 text-xs font-semibold">@nba_slimzy</p>
-                                                            <p className="text-gray-400 text-xs">💯💯💯</p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex items-start gap-2">
-                                                        <div className="w-6 h-6 rounded-full bg-gray-600"></div>
-                                                        <div>
-                                                            <p className="text-gray-300 text-xs font-semibold">@steve.kailu</p>
-                                                            <p className="text-gray-400 text-xs">@centralcee Can't rush
-                                                                greatness 💪🏾💯</p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex items-start gap-2">
-                                                        <div className="w-6 h-6 rounded-full bg-gray-600"></div>
-                                                        <div>
-                                                            <p className="text-gray-300 text-xs font-semibold">@budu_gad</p>
-                                                            <p className="text-gray-400 text-xs">Live yours 🥂👏💯</p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex items-start gap-2">
-                                                        <div className="w-6 h-6 rounded-full bg-gray-600"></div>
-                                                        <div>
-                                                            <p className="text-gray-300 text-xs font-semibold">@jay.bourny</p>
-                                                            <p className="text-gray-400 text-xs">🙌🙌</p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex items-start gap-2">
-                                                        <div className="w-6 h-6 rounded-full bg-gray-600"></div>
-                                                        <div>
-                                                            <p className="text-gray-300 text-xs font-semibold">@_mamiiie_</p>
-                                                            <p className="text-gray-400 text-xs">❤️❤️❤️facts</p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex items-start gap-2">
-                                                        <div className="w-6 h-6 rounded-full bg-gray-600"></div>
-                                                        <div>
-                                                            <p className="text-gray-300 text-xs font-semibold">@lifemotivus</p>
-                                                            <p className="text-gray-400 text-xs">embrace the journey
-                                                                🔥</p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex items-start gap-2">
-                                                        <div className="w-6 h-6 rounded-full bg-gray-600"></div>
-                                                        <div>
-                                                            <p className="text-gray-300 text-xs font-semibold">@simon___325</p>
-                                                            <p className="text-gray-400 text-xs">🔥🔥🔥🔥🔥🔥🔥</p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex items-start gap-2">
-                                                        <div className="w-6 h-6 rounded-full bg-gray-600"></div>
-                                                        <div>
-                                                            <p className="text-gray-300 text-xs font-semibold">@reallfxalexg</p>
-                                                            <p className="text-gray-400 text-xs">🔥🔥</p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex items-start gap-2">
-                                                        <div className="w-6 h-6 rounded-full bg-gray-600"></div>
-                                                        <div>
-                                                            <p className="text-gray-300 text-xs font-semibold">@adrianojunior009</p>
-                                                            <p className="text-gray-400 text-xs">Believe yourself❤️</p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex items-start gap-2">
-                                                        <div className="w-6 h-6 rounded-full bg-gray-600"></div>
-                                                        <div>
-                                                            <p className="text-gray-300 text-xs font-semibold">@nopeacexi</p>
-                                                            <p className="text-gray-400 text-xs">True</p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex items-start gap-2">
-                                                        <div className="w-6 h-6 rounded-full bg-gray-600"></div>
-                                                        <div>
-                                                            <p className="text-gray-300 text-xs font-semibold">@lyxon_0_1</p>
-                                                            <p className="text-gray-400 text-xs">🔥🔥🔥</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
+              <div className="mt-2 md:mt-16 space-y-6 md:space-y-8">
+           
+                <div className="bg-transparent rounded-lg p-3 md:p-6">
+                  {isLinkEntered && (
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 items-start">
+                      <div>
+                        <h4 className="text-white text-xs md:text-sm mb-2 md:mb-3 font-medium">Preview</h4>
+                        <div className="bg-black rounded-2xl overflow-hidden shadow-2xl border border-gray-800 max-w-sm mx-auto lg:max-w-none">
+                          <div className="relative aspect-[4/5]">
+                            {embedSrc ? (
+                              <iframe
+                                src={embedSrc}
+                                width="100%"
+                                height="100%"
+                                frameBorder="0"
+                                allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+                                allowFullScreen
+                                title="Video preview"
+                              ></iframe>
+                            ) : (
+                              <img
+                                src="https://images.unsplash.com/photo-1617019114583-affb34d1b3cd?w=400&h=700&fit=crop"
+                                alt="Preview"
+                                className="w-full h-full object-cover"
+                              />
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-4">
+<div className="flex items-center justify-between mb-2">
+  <h4 className="text-white text-xs md:text-sm font-medium">Video Details</h4>
+  <button
+    onClick={() => setShowReverseEngineer(!showReverseEngineer)}
+    className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-xs font-medium rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+  >
+    {showReverseEngineer ? 'Hide' : 'Reverse Engineer'}
+  </button>
+</div>                        
+                        <div className="bg-gray-900 rounded-lg p-4 border border-gray-800">
+                          <div className="flex items-start gap-3 mb-4">
+                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 shrink-0"></div>
+                            <div className="flex-1">
+                              <p className="text-white text-sm font-semibold">@motivationhub</p>
+                              <p className="text-gray-400 text-xs">1.2M followers</p>
                             </div>
-                        )}
+                          </div>
+                          
+                          <p className="text-gray-300 text-sm leading-relaxed mb-4">
+                            Success doesn't come from what you do occasionally. It comes from what you do consistently. 
+                            Keep pushing forward, even when it's hard. Your future self will thank you. 💪
+                            <br /><br />
+                            <span className="text-blue-400">#motivation #success #mindset #growth #hustle #entrepreneur #goals</span>
+                          </p>
+                          
+                          <div className="grid grid-cols-3 gap-4 pt-4 border-t border-gray-800">
+                            <div className="text-center">
+                              <div className="flex items-center justify-center mb-1">
+                                <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                                  <path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" />
+                                </svg>
+                              </div>
+                              <p className="text-white text-sm font-semibold">24.5K</p>
+                              <p className="text-gray-400 text-xs">Likes</p>
+                            </div>
+                            
+                            <div className="text-center">
+                              <div className="flex items-center justify-center mb-1">
+                                <svg className="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
+                                </svg>
+                              </div>
+                              <p className="text-white text-sm font-semibold">3.2K</p>
+                              <p className="text-gray-400 text-xs">Comments</p>
+                            </div>
+                            
+                            <div className="text-center">
+                              <div className="flex items-center justify-center mb-1">
+                                <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                                </svg>
+                              </div>
+                              <p className="text-white text-sm font-semibold">1.8K</p>
+                              <p className="text-gray-400 text-xs">Shares</p>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="bg-gray-900 rounded-lg p-4 border border-gray-800">
+                          <h5 className="text-white text-sm font-semibold mb-3">Performance</h5>
+                          <div className="space-y-3">
+                            <div className="flex justify-between items-center">
+                              <span className="text-gray-400 text-xs">Views</span>
+                              <span className="text-white text-sm font-medium">487.3K</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="text-gray-400 text-xs">Engagement Rate</span>
+                              <span className="text-green-400 text-sm font-medium">5.8%</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="text-gray-400 text-xs">Posted</span>
+                              <span className="text-white text-sm">2 days ago</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {showReverseEngineer && (
+  <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 space-y-4">
+    <div>
+      <label className="text-white text-sm font-medium mb-2 block">
+        Enter your prompt to reverse engineer this video
+      </label>
+      <textarea
+        value={reversePrompt}
+        onChange={(e) => setReversePrompt(e.target.value)}
+        placeholder="E.g., Analyze the hook, content structure, and engagement strategies used in this video..."
+        className="w-full h-32 bg-black border border-gray-700 rounded-lg px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors resize-none"
+      />
+    </div>
+    <button
+      onClick={() => {
+        if (reversePrompt.trim()) {
+          setActiveStep(2);
+          setShowReverseEngineer(false);
+        }
+      }}
+      disabled={!reversePrompt.trim()}
+      className={`w-full py-3 rounded-lg font-medium text-sm transition-all duration-200 ${
+        reversePrompt.trim()
+          ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg hover:shadow-xl'
+          : 'bg-gray-800 text-gray-500 cursor-not-allowed'
+      }`}
+    >
+      Send to Step 2
+    </button>
+  </div>
+)}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
                     </div>
                 </div>
             </section>
+
+
+
+
+
             {/* Process Section */}
             <section id="process" className="py-12 md:py-24 px-4 bg-gray-950">
                 <div className="container mx-auto">
+
+                    <div className="text-center mb-8 md:mb-12">
+                        <img 
+                            src="/process.jpeg" 
+                            alt="Video creation process illustration" 
+                            className="w-full max-w-3xl mx-auto rounded-2xl shadow-2xl object-cover h-74 md:h-96"
+                        />
+                    </div>
+
                     <div className="text-center mb-8 md:mb-16">
                         <h2 className="text-3xl md:text-5xl font-bold mb-3 md:mb-4 text-white">
                             Simple 5-Step Process
@@ -1731,6 +1781,9 @@ export default function Landing() {
                     </div>
                 </div>
             </section>
+
+
+
             <Pricing/>
             <Contact/>
         </div>
